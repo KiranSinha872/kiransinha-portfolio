@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0C0C0C;
+  --foreground: #EDEDED;
+  --muted: #8E9BAE;
+  --card-bg: #141414;
+  --card-border: rgba(255, 255, 255, 0.08);
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #0C0C0C;
+  color: #EDEDED;
+  font-family: var(--font-kanit), system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+}
+
+/* 3D Creator Metallic Gradient Text Heading */
+.gradient-text {
+  background: linear-gradient(180deg, #646973 0%, #BBCCD7 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient-text-light {
+  background: linear-gradient(180deg, #FFFFFF 20%, #8E9BAE 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Subtle Metallic Surfaces & Borders */
+.surface-card {
+  background-color: #141414;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.surface-pill {
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Disable drag-and-drop ghosting for all images, svg, and media */
+img, svg, video {
+  user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}

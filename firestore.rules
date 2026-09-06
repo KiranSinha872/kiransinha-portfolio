@@ -1,0 +1,56 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Function to verify if the requesting user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Function to restrict write operations to the specific admin user UID
+    // Replace YOUR_ADMIN_UID with your Firebase Auth UID (found in Firebase Console > Authentication > Users)
+    function isAdmin() {
+      return isAuthenticated() && (
+        // Allow any authenticated admin in project or restrict to specific UID:
+        request.auth.uid != null
+        // Example: request.auth.uid == "tEINgvacYf88MEJWTX3OORk..."
+      );
+    }
+
+    // 1. Profile Collection & Single Document
+    match /profile/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 2. Education Collection
+    match /education/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 3. Skills Collection
+    match /skills/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 4. Certifications Collection
+    match /certifications/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 5. Projects Collection
+    match /projects/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Deny all other unmatched document paths by default
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
