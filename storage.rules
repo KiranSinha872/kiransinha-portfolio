@@ -2,45 +2,63 @@ rules_version = '2';
 
 service firebase.storage {
   match /b/{bucket}/o {
-    
-    // Check if user is authenticated
-    function isAuthenticated() {
-      return request.auth != null;
-    }
 
-    // Function to restrict write operations to the authenticated admin user UID
+    // Verify user is authenticated and matches specific Admin UID
+    // REPLACE <MY_ADMIN_UID> with your actual Firebase Auth UID (Firebase Console > Authentication > Users)
     function isAdmin() {
-      return isAuthenticated() && (
-        request.auth.uid != null
-      );
+      return request.auth != null && request.auth.uid == "<MY_ADMIN_UID>";
     }
 
-    // Public read access for uploaded portfolio assets (avatars, projects screenshots, certification badges)
-    // Write/delete/update access restricted to the authenticated admin
-    match /avatars/{allPaths=**} {
+    // Image validation: max 5MB, valid image mime type
+    function isValidImage() {
+      return request.resource.size < 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/(jpeg|jpg|png|webp|gif|svg\\+xml)');
+    }
+
+    // PDF document validation: max 10MB, application/pdf
+    function isValidResume() {
+      return request.resource.size < 10 * 1024 * 1024
+        && request.resource.contentType == 'application/pdf';
+    }
+
+    // 1. Profile avatars (public read for portfolio visitor, admin-only write)
+    match /avatars/{fileName} {
       allow read: if true;
-      allow write, delete: if isAdmin();
+      allow write: if isAdmin() && isValidImage();
+      allow delete: if isAdmin();
     }
 
-    match /projects/{allPaths=**} {
+    // 2. Project screenshots and thumbnails
+    match /projects/{fileName} {
       allow read: if true;
-      allow write, delete: if isAdmin();
+      allow write: if isAdmin() && isValidImage();
+      allow delete: if isAdmin();
     }
 
-    match /certifications/{allPaths=**} {
+    // 3. Certification badges
+    match /certifications/{fileName} {
       allow read: if true;
-      allow write, delete: if isAdmin();
+      allow write: if isAdmin() && isValidImage();
+      allow delete: if isAdmin();
     }
 
-    match /uploads/{allPaths=**} {
+    // 4. General portfolio image uploads
+    match /uploads/{fileName} {
       allow read: if true;
-      allow write, delete: if isAdmin();
+      allow write: if isAdmin() && isValidImage();
+      allow delete: if isAdmin();
     }
 
-    // Default rule
+    // 5. Resume PDF documents (public read for portfolio viewers, admin-only write)
+    match /resumes/{fileName} {
+      allow read: if true;
+      allow write: if isAdmin() && isValidResume();
+      allow delete: if isAdmin();
+    }
+
+    // Deny all other unmatched storage paths by default
     match /{allPaths=**} {
-      allow read: if true;
-      allow write: if isAdmin();
+      allow read, write: if false;
     }
   }
 }

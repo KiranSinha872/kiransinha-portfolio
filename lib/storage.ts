@@ -84,9 +84,10 @@ export async function uploadFileToStorage(
 
     return await Promise.race([uploadPromise, timeoutPromise]);
   } catch (err) {
-    console.warn('Firebase Storage upload failed or timed out, applying optimized data fallback:', err);
-    const maxDimension = folderPath === 'avatars' ? 600 : 1000;
-    return await compressImageToBase64(file, maxDimension, maxDimension, 0.85);
+    console.error('Firebase Storage upload failed:', err);
+    throw new Error(
+      `Storage upload failed: ${err instanceof Error ? err.message : 'Unknown error'}`
+    );
   }
 }
 
@@ -127,8 +128,10 @@ export async function uploadResumeFile(
 
     return await Promise.race([uploadPromise, timeoutPromise]);
   } catch (err) {
-    console.warn('Resume upload to storage failed, falling back to data URL:', err);
-    return await fileToDataUrl(file);
+    console.error('Resume upload to storage failed:', err);
+    throw new Error(
+      `Resume upload failed: ${err instanceof Error ? err.message : 'Unknown error'}`
+    );
   }
 }
 
