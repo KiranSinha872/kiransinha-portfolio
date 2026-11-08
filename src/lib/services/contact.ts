@@ -9,6 +9,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase/client';
 import { createConverter } from './converter';
+import { contactMessageSchema } from '@/lib/security/validation';
 
 export interface ContactMessage {
   id?: string;
@@ -24,11 +25,13 @@ export const CONTACT_COLLECTION = 'contact_messages';
 export async function submitContactMessage(
   data: Omit<ContactMessage, 'id' | 'createdAt' | 'read'>
 ): Promise<string> {
+  const validated = contactMessageSchema.parse(data);
+
   const contactRef = collection(db, CONTACT_COLLECTION).withConverter(
     createConverter<ContactMessage>()
   );
   const docRef = await addDoc(contactRef, {
-    ...data,
+    ...validated,
     read: false,
     createdAt: serverTimestamp(),
   } as unknown as ContactMessage);
