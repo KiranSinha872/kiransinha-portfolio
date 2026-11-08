@@ -1,6 +1,21 @@
 import type { NextConfig } from "next";
 
+const cspHeader = `
+  default-src 'self';
+  script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/;
+  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+  img-src 'self' blob: data: https://firebasestorage.googleapis.com https://storage.googleapis.com https://images.unsplash.com https://avatars.githubusercontent.com https://*.googleusercontent.com;
+  font-src 'self' data: https://fonts.gstatic.com;
+  media-src 'self' blob: https://d8j0ntlcm91z4.cloudfront.net;
+  connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com https://firebaseinstallations.googleapis.com https://*.google-analytics.com https://www.google.com/recaptcha/ wss://*.firebaseio.com;
+  frame-src https://www.google.com/recaptcha/ https://recaptcha.google.com/;
+  object-src 'none';
+  base-uri 'self';
+  form-action 'self';
+`.replace(/\s{2,}/g, ' ').trim();
+
 const nextConfig: NextConfig = {
+  poweredByHeader: false,
   devIndicators: false,
   turbopack: {
     root: __dirname,
@@ -61,6 +76,10 @@ const nextConfig: NextConfig = {
         source: '/(.*)',
         headers: [
           {
+            key: 'Content-Security-Policy',
+            value: cspHeader,
+          },
+          {
             key: 'X-DNS-Prefetch-Control',
             value: 'on',
           },
@@ -70,7 +89,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: 'X-Frame-Options',
-            value: 'SAMEORIGIN',
+            value: 'DENY',
           },
           {
             key: 'X-Content-Type-Options',
