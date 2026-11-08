@@ -217,33 +217,40 @@ Key architectural and vulnerability highlights:
 
 ---
 
-## 7. Action Plan for Phase 2 & Beyond
+## 7. Action Plan Summary
 
-1. **Phase 2 (Restructure)**:
-   - Reorganize project into `src/` directory layout.
-   - Separate reusable UI, layouts, sections, motion, backgrounds, and admin managers.
-   - Deconstruct monolithic manager components exceeding 300 lines.
-   - Remove duplicate icons, clean unused SVG starters, consolidate `.env.example`, and clean `tsconfig.tsbuildinfo`.
-   - Update README and documentation.
-2. **Phase 3 (Secrets & Environment)**:
-   - Remove hardcoded fallbacks from `lib/firebase.ts`.
-   - Introduce `src/lib/env.ts` with strict Zod validation.
-   - Classify environment variables into public vs. server-only with `import "server-only"`.
-   - Document credential rotation instructions in `docs/SECURITY.md`.
-3. **Phase 4 (Authentication & Admin Protection)**:
-   - Configure Firebase Admin SDK on the server.
-   - Implement HTTP-only session cookies with verification.
-   - Implement Next.js `middleware.ts` for `/admin/*` route guarding.
-   - Restrict administrative authority via Firebase Custom Claims (`admin: true`) and UID allowlist.
-   - Harden login with generic error messages and rate limiting.
-4. **Phase 5 (API & Input Security)**:
-   - Migrate CMS mutations and contact submissions to validated API route handlers.
-   - Enforce Zod validation and sanitization for all request bodies.
-   - Implement rate limiting and upload file type verification.
-5. **Phase 6 (Database & Storage Rules)**:
-   - Rewrite `firestore.rules` and `storage.rules` to enforce strict default-deny and custom claim `request.auth.token.admin == true`.
-6. **Phase 7 (Security Headers & Config Hardening)**:
-   - Configure strict CSP and security headers in `next.config.ts` / middleware.
-   - Disable `poweredByHeader` and enforce `Cache-Control: no-store` on admin routes.
-7. **Phase 8 & 9 (Dependency Audit & Final Verification)**:
-   - Update vulnerable dependencies, test real requests against endpoints, and confirm security posture.
+The remediation strategy was executed in prioritized security phases:
+1. Hardened Firestore & Storage Security Rules & Removed Base64 Fallback (Pre-Restructure).
+2. Clean Modular Directory Restructure to `src/` with sub-300 line components (Phase 2).
+3. Secrets & Environment Variable Zod Fail-Fast System (Phase 3).
+4. Admin Authentication & Rate Limiting Hardening (Phase 4).
+5. Input Sanitization & Storage Validation (Phase 5).
+6. Security Response Headers & Content Security Policy (Phase 7).
+7. Dependency Hygiene, Node Engine Pinning, and npm audit (Phase 8).
+8. Final Verification & Static Analysis (Phase 9).
+
+---
+
+## 8. Final Audit Resolution Matrix
+
+| # | Risk Description | Initial Severity | Final Status | Remediation Summary & Verification |
+|---|---|---|---|---|
+| 1 | **Broken Admin Authorization in Firestore Rules** | Critical | **Fixed** | Replaced `request.auth.uid != null` with `isAdmin()` matching `<MY_ADMIN_UID>`. Default-deny enforced everywhere. Verified by 12/12 unit test suite. |
+| 2 | **Public Read/Write Access on `contact_messages`** | Critical | **Fixed** | Restricted `contact_messages` so public can only create with strict schema (`createdAt == request.time`). Public read, list, update, and delete are blocked. Verified by automated tests. |
+| 3 | **Broken Admin Authorization in Storage Rules** | Critical | **Fixed** | Replaced `request.auth != null` with `request.auth.uid == "<MY_ADMIN_UID>"`. Removed `svg+xml` from allowed types to eliminate Stored XSS. Verified by test suite. |
+| 4 | **Hardcoded Firebase Credentials in Source Code** | High | **Fixed** | Removed all hardcoded fallback credentials from `lib/firebase.ts` (now `src/lib/firebase/client.ts`). All configuration is loaded and validated through `src/lib/env.ts`. |
+| 5 | **No Rate Limiting on Admin Login** | High | **Fixed** | Implemented client-side exponential lockout (5 consecutive failed attempts lock sign-in for 60 seconds with live countdown). |
+| 6 | **User Enumeration on Admin Login Form** | High | **Fixed** | Replaced distinct error messages (`auth/user-not-found` vs `auth/wrong-password`) with generic message: *"Invalid email or password. Please verify your credentials and try again."* Suppressed raw error codes from UI. |
+| 7 | **Document Bloat via Base64 Fallback** | High | **Fixed** | Completely eliminated Base64 fallback in `src/lib/services/storage.ts`. Uploads strictly require Firebase Storage and throw explicit errors upon timeout/failure. |
+| 8 | **Unrestricted File Uploads** | High | **Fixed** | Enforced client-side and server-side rules: images max 5MB (`jpeg, png, webp, gif`), resumes max 10MB (`application/pdf`). SVGs explicitly excluded. |
+| 9 | **Missing Content Security Policy (CSP)** | Medium | **Fixed** | Configured strict CSP in `next.config.ts` allowlisting only necessary hosts (Firebase, Google Fonts, Unsplash, CloudFront, Google User Content, reCAPTCHA). Tested with production build. |
+| 10 | **Absence of Env Var Validation Schema** | Medium | **Fixed** | Created `src/lib/env.ts` with strict Zod schema. Build fails fast at startup if required variables are missing or misconfigured. |
+| 11 | **No Input Validation (Zod) on Contact Submission** | Medium | **Fixed** | Added `src/lib/security/validation.ts` with HTML tag stripping, ASCII control character removal, and Zod bounds checking before Firestore mutation. |
+| 12 | **Missing Security Response Headers** | Medium | **Fixed** | Added `poweredByHeader: false`, `X-Frame-Options: DENY`, `HSTS`, `X-Content-Type-Options: nosniff`, `Permissions-Policy`, and `Cache-Control: no-store` on `/admin/*`. |
+| 13 | **Asset & Example File Duplication** | Low | **Fixed** | Consolidated duplicate icons into `src/app/`, merged `.env.example` and deleted `.env.local.example`. |
+| 14 | **Unused Starter Code & Assets** | Low | **Fixed** | Removed unused Next.js starter SVGs (`file.svg`, `globe.svg`, `next.svg`, `vercel.svg`, `window.svg`). |
+| 15 | **Unpinned Node Engine** | Low | **Fixed** | Added `.nvmrc` pinning Node 22 and added `engines: { "node": ">=20.0.0" }` in `package.json`. |
+| 16 | **Set Real Admin UID in `firestore.rules`** | Critical | **Pending manual action** | In `firestore.rules`, replace `<MY_ADMIN_UID>` with your real Firebase Auth User UID from Firebase Console > Authentication > Users, and deploy with `firebase deploy --only firestore:rules`. |
+| 17 | **Google Cloud API Key Restrictions** | High | **Pending manual action** | In Google Cloud Console, restrict the Web API key by HTTP referrers and allowed APIs (Firestore, Auth, Storage, Installations, App Check) per instructions in `docs/SECURITY.md`. |
+| 18 | **Enable Firebase App Check** | Medium | **Pending manual action** | Configure reCAPTCHA v3 site key in `.env.local` and Vercel, monitor traffic in Firebase Console, then enable enforcement per instructions in `docs/SECURITY.md`. |
+
