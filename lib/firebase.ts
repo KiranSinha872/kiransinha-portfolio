@@ -2,6 +2,7 @@ import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app';
 import { getAuth, Auth } from 'firebase/auth';
 import { initializeFirestore, getFirestore, Firestore } from 'firebase/firestore';
 import { getStorage, FirebaseStorage } from 'firebase/storage';
+import { initializeAppCheck, ReCaptchaV3Provider, AppCheck } from 'firebase/app-check';
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || 'AIzaSyCt02tFJ7JgNI6IFH2ERycVRgndXM2nM8Q',
@@ -29,6 +30,30 @@ try {
 
 const storage: FirebaseStorage = getStorage(app);
 
-export { app, auth, db, storage };
+// Initialize Firebase App Check safely (Client-side only)
+let appCheck: AppCheck | undefined;
+if (typeof window !== 'undefined') {
+  const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+
+  if (process.env.NODE_ENV === 'development') {
+    // In development mode, enable debug token flow so local development is not blocked
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (self as any).FIREBASE_APPCHECK_DEBUG_TOKEN =
+      process.env.NEXT_PUBLIC_FIREBASE_APPCHECK_DEBUG_TOKEN || true;
+  }
+
+  if (recaptchaSiteKey) {
+    try {
+      appCheck = initializeAppCheck(app, {
+        provider: new ReCaptchaV3Provider(recaptchaSiteKey),
+        isTokenAutoRefreshEnabled: true,
+      });
+    } catch (err) {
+      console.warn('Firebase App Check initialization error:', err);
+    }
+  }
+}
+
+export { app, auth, db, storage, appCheck };
 export default app;
 

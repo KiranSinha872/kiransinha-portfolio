@@ -178,8 +178,9 @@ service cloud.firestore {
         'avatarUrl', 'resumeUrl', 'location', 'focusArea', 'mindset',
         'email', 'contactEmail', 'phone', 'linkedinUrl', 'githubUrl',
         'leetcodeUrl', 'codechefUrl', 'codeforcesUrl', 'twitterUrl',
-        'socials', 'createdAt', 'updatedAt'
+        'socials', 'createdAt', 'updatedAt', 'id'
       ]) &&
+      isValidOptionalString(data, 'id', 0, 100) &&
       isValidOptionalString(data, 'name', 0, 100) &&
       isValidOptionalString(data, 'title', 0, 200) &&
       isValidOptionalString(data, 'headline', 0, 200) &&
@@ -209,9 +210,10 @@ service cloud.firestore {
       return hasOnlyAllowedFields([
         'institution', 'degree', 'fieldOfStudy', 'startDate', 'endDate',
         'isCurrent', 'grade', 'location', 'description', 'order',
-        'createdAt', 'updatedAt'
+        'createdAt', 'updatedAt', 'id'
       ]) &&
       hasRequiredFields(['institution', 'degree']) &&
+      isValidOptionalString(data, 'id', 0, 100) &&
       isValidString(data.institution, 1, 200) &&
       isValidString(data.degree, 1, 200) &&
       isValidOptionalString(data, 'fieldOfStudy', 0, 200) &&
@@ -229,9 +231,10 @@ service cloud.firestore {
     function isValidSkill(data) {
       return hasOnlyAllowedFields([
         'name', 'category', 'proficiency', 'iconUrl', 'featured',
-        'order', 'createdAt', 'updatedAt'
+        'order', 'createdAt', 'updatedAt', 'id'
       ]) &&
       hasRequiredFields(['name', 'category']) &&
+      isValidOptionalString(data, 'id', 0, 100) &&
       isValidString(data.name, 1, 100) &&
       isValidString(data.category, 1, 100) &&
       (!( 'proficiency' in data ) || (data.proficiency is number && data.proficiency >= 0 && data.proficiency <= 100)) &&
@@ -245,9 +248,10 @@ service cloud.firestore {
     function isValidCertification(data) {
       return hasOnlyAllowedFields([
         'title', 'issuer', 'issueDate', 'expiryDate', 'credentialId',
-        'credentialUrl', 'badgeUrl', 'order', 'createdAt', 'updatedAt'
+        'credentialUrl', 'badgeUrl', 'order', 'createdAt', 'updatedAt', 'id'
       ]) &&
       hasRequiredFields(['title', 'issuer']) &&
+      isValidOptionalString(data, 'id', 0, 100) &&
       isValidString(data.title, 1, 200) &&
       isValidString(data.issuer, 1, 200) &&
       isValidOptionalString(data, 'issueDate', 0, 50) &&
@@ -264,9 +268,10 @@ service cloud.firestore {
       return hasOnlyAllowedFields([
         'title', 'slug', 'description', 'tags', 'tagline', 'longDescription',
         'thumbnailUrl', 'images', 'liveUrl', 'repoUrl', 'featured', 'order',
-        'publishedAt', 'createdAt', 'updatedAt'
+        'publishedAt', 'createdAt', 'updatedAt', 'id'
       ]) &&
       hasRequiredFields(['title', 'slug', 'description', 'tags']) &&
+      isValidOptionalString(data, 'id', 0, 100) &&
       isValidString(data.title, 1, 200) &&
       isValidString(data.slug, 1, 200) &&
       isValidString(data.description, 1, 5000) &&
@@ -285,17 +290,18 @@ service cloud.firestore {
     }
 
     function isValidContactMessageCreate(data) {
-      return hasOnlyAllowedFields(['name', 'email', 'message', 'createdAt', 'read']) &&
+      return hasOnlyAllowedFields(['name', 'email', 'message', 'createdAt', 'read', 'id']) &&
         hasRequiredFields(['name', 'email', 'message', 'createdAt']) &&
+        isValidOptionalString(data, 'id', 0, 100) &&
         isValidString(data.name, 1, 100) &&
         (data.email is string && data.email.size() >= 3 && data.email.size() <= 254 && data.email.matches(".*@.*")) &&
         isValidString(data.message, 1, 5000) &&
-        isValidDate(data.createdAt) &&
+        data.createdAt == request.time &&
         (!('read' in data) || data.read == false);
     }
 
     function isValidContactMessageUpdate(newData, oldData) {
-      return hasOnlyAllowedFields(['name', 'email', 'message', 'createdAt', 'read']) &&
+      return hasOnlyAllowedFields(['name', 'email', 'message', 'createdAt', 'read', 'id']) &&
         newData.name == oldData.name &&
         newData.email == oldData.email &&
         newData.message == oldData.message &&
