@@ -1,7 +1,14 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { getProfile, updateProfile } from '@/lib/services/firestore';
+import React, { useState, useEffect, useCallback } from 'react';
+import {
+  getProfile,
+  updateProfile,
+  getContactMessages,
+  markContactMessageRead,
+  deleteContactMessage,
+} from '@/lib/services/firestore';
+import type { ContactMessage } from '@/lib/services/contact';
 import { useToast } from '@/components/ui/Toast';
 import type { SocialLink } from '@/types';
 import {
@@ -11,6 +18,10 @@ import {
   Trash2,
   Loader2,
   Save,
+  RefreshCw,
+  CheckCircle,
+  Clock,
+  Inbox,
 } from 'lucide-react';
 
 const COMMON_PLATFORMS = [
@@ -35,14 +46,33 @@ export default function ContactManager() {
   const [phone, setPhone] = useState('');
   const [socials, setSocials] = useState<SocialLink[]>([]);
 
+  // Inbound Messages State
+  const [messages, setMessages] = useState<ContactMessage[]>([]);
+  const [loadingMessages, setLoadingMessages] = useState(false);
+
+  const fetchMessages = useCallback(async () => {
+    setLoadingMessages(true);
+    try {
+      const list = await getContactMessages();
+      setMessages(list);
+    } catch (err) {
+      console.error('Error fetching contact messages:', err);
+    } finally {
+      setLoadingMessages(false);
+    }
+  }, []);
+
   useEffect(() => {
     async function loadData() {
       try {
-        const data = await getProfile();
-        if (data) {
-          setEmail(data.email || data.contactEmail || '');
-          setPhone(data.phone || '');
-          setSocials(data.socials || []);
+        const [profileData] = await Promise.all([
+          getProfile(),
+          fetchMessages(),
+        ]);
+        if (profileData) {
+          setEmail(profileData.email || profileData.contactEmail || '');
+          setPhone(profileData.phone || '');
+          setSocials(profileData.socials || []);
         }
       } catch (err) {
         console.error('Error fetching contact info:', err);
@@ -52,7 +82,35 @@ export default function ContactManager() {
       }
     }
     loadData();
-  }, [showToast]);
+  }, [showToast, fetchMessages]);
+
+  const handleToggleRead = async (msg: ContactMessage) => {
+    if (!msg.id) return;
+    const nextRead = !msg.read;
+    try {
+      await markContactMessageRead(msg.id, nextRead);
+      setMessages((prev) =>
+        prev.map((m) => (m.id === msg.id ? { ...m, read: nextRead } : m))
+      );
+      showToast('success', nextRead ? 'Message marked as read' : 'Message marked as unread');
+    } catch (err) {
+      console.error('Toggle read error:', err);
+      showToast('error', 'Failed to update message status');
+    }
+  };
+
+  const handleDeleteMessage = async (id?: string) => {
+    if (!id) return;
+    if (!confirm('Are you sure you want to delete this message?')) return;
+    try {
+      await deleteContactMessage(id);
+      setMessages((prev) => prev.filter((m) => m.id !== id));
+      showToast('success', 'Message deleted');
+    } catch (err) {
+      console.error('Delete message error:', err);
+      showToast('error', 'Failed to delete message');
+    }
+  };
 
   const handleAddSocial = () => {
     setSocials((prev) => [
@@ -239,7 +297,7 @@ export default function ContactManager() {
           <button
             type="submit"
             disabled={saving}
-            className="inline-flex items-center gap-1.5 px-4 py-2 border border-gray-900 bg-gray-900 text-white text-xs font-medium rounded hover:bg-gray-800 disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 px-4 py-2 border border-gray-900 bg-gray-900 text-white text-xs font-medium rounded hover:bg-gray-800 disabled:opacity-50 cursor-pointer"
           >
             {saving ? (
               <>
@@ -255,6 +313,104 @@ export default function ContactManager() {
           </button>
         </div>
       </form>
+
+      {/* Inbound Visitor Messages Section */}
+      <div className="pt-8 border-t border-gray-200 space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Inbox className="w-5 h-5 text-gray-700" />
+            <h3 className="text-base font-bold text-gray-900">
+              Inbound Messages
+            </h3>
+            <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-gray-100 text-gray-700 border border-gray-200">
+              {messages.length} total • {messages.filter((m) => !m.read).length} unread
+            </span>
+          </div>
+
+          <button
+            type="button"
+            onClick={fetchMessages}
+            disabled={loadingMessages}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-gray-300 rounded text-xs bg-white text-gray-700 hover:bg-gray-50 cursor-pointer disabled:opacity-50"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${loadingMessages ? 'animate-spin' : ''}`} />
+            <span>Refresh</span>
+          </button>
+        </div>
+
+        {loadingMessages ? (
+          <div className="p-8 flex justify-center items-center text-gray-400">
+            <Loader2 className="w-5 h-5 animate-spin" />
+          </div>
+        ) : messages.length === 0 ? (
+          <div className="p-8 text-center border border-dashed border-gray-300 rounded-lg bg-gray-50 text-xs text-gray-500">
+            No inbound messages received yet.
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {messages.map((msg) => (
+              <div
+                key={msg.id}
+                className={`p-4 rounded-lg border transition-all ${
+                  msg.read
+                    ? 'bg-white border-gray-200 text-gray-700'
+                    : 'bg-emerald-50/40 border-emerald-200 text-gray-900 shadow-xs'
+                }`}
+              >
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-gray-100">
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold text-xs text-gray-900">
+                      {msg.name}
+                    </span>
+                    <a
+                      href={`mailto:${msg.email}`}
+                      className="text-xs text-emerald-700 hover:underline"
+                    >
+                      &lt;{msg.email}&gt;
+                    </a>
+                    {!msg.read && (
+                      <span className="px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-emerald-600 text-white">
+                        New
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-3 text-[11px] text-gray-500">
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      {typeof msg.createdAt === 'string'
+                        ? new Date(msg.createdAt).toLocaleString()
+                        : 'Recent'}
+                    </span>
+
+                    <button
+                      type="button"
+                      onClick={() => handleToggleRead(msg)}
+                      className="hover:text-emerald-700 transition-colors cursor-pointer"
+                      title={msg.read ? 'Mark as Unread' : 'Mark as Read'}
+                    >
+                      <CheckCircle className={`w-4 h-4 ${msg.read ? 'text-gray-400' : 'text-emerald-600'}`} />
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteMessage(msg.id)}
+                      className="text-red-500 hover:text-red-700 transition-colors cursor-pointer"
+                      title="Delete Message"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+
+                <p className="mt-2.5 text-xs text-gray-800 whitespace-pre-wrap leading-relaxed">
+                  {msg.message}
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -11,12 +11,28 @@ import {
   onSnapshot,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase/client';
+import { supabase } from '@/lib/supabase/client';
+import { projectRowToModel, projectModelToRow, type ProjectRow } from '@/lib/supabase/mappers';
+import { isSupabaseBackend } from './backend';
 import type { Project } from '@/types';
 import { createConverter } from './converter';
 
 export const PROJECTS_COLLECTION = 'projects';
 
 export async function getProjectsList(): Promise<Project[]> {
+  if (isSupabaseBackend()) {
+    const { data, error } = await supabase
+      .from('projects')
+      .select('*')
+      .order('sort_order', { ascending: true });
+
+    if (error) {
+      console.error('Supabase getProjectsList error:', error);
+      return [];
+    }
+    return (data || []).map((row) => projectRowToModel(row as ProjectRow));
+  }
+
   const projectsRef = collection(db, PROJECTS_COLLECTION).withConverter(
     createConverter<Project>()
   );
@@ -26,6 +42,20 @@ export async function getProjectsList(): Promise<Project[]> {
 }
 
 export async function getProjectById(id: string): Promise<Project | null> {
+  if (isSupabaseBackend()) {
+    const { data, error } = await supabase
+      .from('projects')
+      .select('*')
+      .eq('id', id)
+      .maybeSingle();
+
+    if (error) {
+      console.error('Supabase getProjectById error:', error);
+      return null;
+    }
+    return data ? projectRowToModel(data as ProjectRow) : null;
+  }
+
   const docRef = doc(db, PROJECTS_COLLECTION, id).withConverter(
     createConverter<Project>()
   );
@@ -34,6 +64,20 @@ export async function getProjectById(id: string): Promise<Project | null> {
 }
 
 export async function getProjectBySlug(slug: string): Promise<Project | null> {
+  if (isSupabaseBackend()) {
+    const { data, error } = await supabase
+      .from('projects')
+      .select('*')
+      .eq('slug', slug)
+      .maybeSingle();
+
+    if (error) {
+      console.error('Supabase getProjectBySlug error:', error);
+      return null;
+    }
+    return data ? projectRowToModel(data as ProjectRow) : null;
+  }
+
   const projectsRef = collection(db, PROJECTS_COLLECTION).withConverter(
     createConverter<Project>()
   );
@@ -43,6 +87,21 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
 }
 
 export async function addProject(data: Omit<Project, 'id'>): Promise<string> {
+  if (isSupabaseBackend()) {
+    const row = projectModelToRow(data);
+    const { data: inserted, error } = await supabase
+      .from('projects')
+      .insert(row)
+      .select('id')
+      .single();
+
+    if (error) {
+      console.error('Supabase addProject error:', error);
+      throw error;
+    }
+    return inserted.id;
+  }
+
   const projectsRef = collection(db, PROJECTS_COLLECTION).withConverter(
     createConverter<Project>()
   );
@@ -58,6 +117,17 @@ export async function updateProject(
   id: string,
   data: Partial<Project>
 ): Promise<void> {
+  if (isSupabaseBackend()) {
+    const row = projectModelToRow(data);
+    const { error } = await supabase.from('projects').update(row).eq('id', id);
+
+    if (error) {
+      console.error('Supabase updateProject error:', error);
+      throw error;
+    }
+    return;
+  }
+
   const docRef = doc(db, PROJECTS_COLLECTION, id);
   await updateDoc(docRef, {
     ...data,
@@ -66,6 +136,15 @@ export async function updateProject(
 }
 
 export async function deleteProject(id: string): Promise<void> {
+  if (isSupabaseBackend()) {
+    const { error } = await supabase.from('projects').delete().eq('id', id);
+    if (error) {
+      console.error('Supabase deleteProject error:', error);
+      throw error;
+    }
+    return;
+  }
+
   const docRef = doc(db, PROJECTS_COLLECTION, id);
   await deleteDoc(docRef);
 }
@@ -73,6 +152,20 @@ export async function deleteProject(id: string): Promise<void> {
 export function subscribeToProjects(
   callback: (projectsList: Project[]) => void
 ): () => void {
+  if (isSupabaseBackend()) {
+    let isMounted = true;
+    getProjectsList()
+      .then((data) => {
+        if (isMounted) callback(data);
+      })
+      .catch((error) => {
+        console.warn('Projects fetch error:', error);
+      });
+    return () => {
+      isMounted = false;
+    };
+  }
+
   const projectsRef = collection(db, PROJECTS_COLLECTION).withConverter(
     createConverter<Project>()
   );

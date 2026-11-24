@@ -16,20 +16,24 @@ export function sanitizeInput(input: string): string {
 export const contactMessageSchema = z.object({
   name: z
     .string()
+    .trim()
     .min(1, 'Name is required')
     .max(100, 'Name cannot exceed 100 characters')
-    .transform(sanitizeInput),
+    .transform(sanitizeInput)
+    .refine((val) => val.length > 0, 'Name is required'),
   email: z
     .string()
-    .email('Invalid email address')
-    .max(100, 'Email cannot exceed 100 characters')
     .trim()
-    .toLowerCase(),
+    .toLowerCase()
+    .email('Invalid email address')
+    .max(100, 'Email cannot exceed 100 characters'),
   message: z
     .string()
+    .trim()
     .min(1, 'Message is required')
     .max(3000, 'Message cannot exceed 3000 characters')
-    .transform(sanitizeInput),
+    .transform(sanitizeInput)
+    .refine((val) => val.length > 0, 'Message is required'),
 });
 
 export type ContactMessageInput = z.infer<typeof contactMessageSchema>;

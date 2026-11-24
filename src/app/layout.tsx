@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import Script from 'next/script';
-import { Kanit } from 'next/font/google';
+import { Anton, Bebas_Neue, DM_Sans, DM_Serif_Display, Kanit } from 'next/font/google';
 import { env } from '@/lib/env';
 import './globals.css';
 
@@ -11,11 +10,38 @@ const kanit = Kanit({
   display: 'swap',
 });
 
+const bebasNeue = Bebas_Neue({
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-bebas',
+  display: 'swap',
+});
+
+const anton = Anton({
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-anton',
+  display: 'swap',
+});
+
+const dmSans = DM_Sans({
+  subsets: ['latin'],
+  variable: '--font-dm-sans',
+  display: 'swap',
+});
+
+const dmSerifDisplay = DM_Serif_Display({
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-dm-serif',
+  display: 'swap',
+});
+
 const siteUrl = env.NEXT_PUBLIC_SITE_URL;
 
 export const viewport: Viewport = {
-  themeColor: '#0C0C0C',
-  colorScheme: 'dark',
+  themeColor: '#F9F9F9',
+  colorScheme: 'light dark',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
@@ -104,16 +130,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${kanit.variable} dark`}>
-      <body className="min-h-screen bg-[#0C0C0C] text-[#EDEDED] font-sans antialiased selection:bg-slate-700 selection:text-white">
-        <Script
-          src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"
-          strategy="beforeInteractive"
-        />
-        <Script
-          src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.birds.min.js"
-          strategy="afterInteractive"
-        />
+    <html
+      lang="en"
+      className={`${kanit.variable} ${anton.variable} ${bebasNeue.variable} ${dmSans.variable} ${dmSerifDisplay.variable}`}
+    >
+      <body className="min-h-screen bg-[#0C0C0C] text-[#EDEDED] font-sans antialiased selection:bg-[#0B7658]/20 selection:text-[#0B7658]">
         {children}
       </body>
     </html>

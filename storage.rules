@@ -56,6 +56,15 @@ service firebase.storage {
       allow delete: if isAdmin();
     }
 
+    // 6. Institution logos (public read, admin write/delete, max 2MB, png/jpeg/webp only)
+    match /institutions/{fileName} {
+      allow read: if true;
+      allow write: if isAdmin()
+        && request.resource.size < 2 * 1024 * 1024
+        && request.resource.contentType.matches('image/(jpeg|jpg|png|webp)');
+      allow delete: if isAdmin();
+    }
+
     // Deny all other unmatched storage paths by default
     match /{allPaths=**} {
       allow read, write: if false;

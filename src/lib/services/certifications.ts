@@ -9,12 +9,32 @@ import {
   onSnapshot,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase/client';
+import { supabase } from '@/lib/supabase/client';
+import {
+  certificationRowToModel,
+  certificationModelToRow,
+  type CertificationRow,
+} from '@/lib/supabase/mappers';
+import { isSupabaseBackend } from './backend';
 import type { Certification } from '@/types';
 import { createConverter } from './converter';
 
 export const CERTIFICATIONS_COLLECTION = 'certifications';
 
 export async function getCertificationsList(): Promise<Certification[]> {
+  if (isSupabaseBackend()) {
+    const { data, error } = await supabase
+      .from('certifications')
+      .select('*')
+      .order('sort_order', { ascending: true });
+
+    if (error) {
+      console.error('Supabase getCertificationsList error:', error);
+      return [];
+    }
+    return (data || []).map((row) => certificationRowToModel(row as CertificationRow));
+  }
+
   const certsRef = collection(db, CERTIFICATIONS_COLLECTION).withConverter(
     createConverter<Certification>()
   );
@@ -26,6 +46,20 @@ export async function getCertificationsList(): Promise<Certification[]> {
 export async function getCertificationById(
   id: string
 ): Promise<Certification | null> {
+  if (isSupabaseBackend()) {
+    const { data, error } = await supabase
+      .from('certifications')
+      .select('*')
+      .eq('id', id)
+      .maybeSingle();
+
+    if (error) {
+      console.error('Supabase getCertificationById error:', error);
+      return null;
+    }
+    return data ? certificationRowToModel(data as CertificationRow) : null;
+  }
+
   const docRef = doc(db, CERTIFICATIONS_COLLECTION, id).withConverter(
     createConverter<Certification>()
   );
@@ -36,6 +70,21 @@ export async function getCertificationById(
 export async function addCertification(
   data: Omit<Certification, 'id'>
 ): Promise<string> {
+  if (isSupabaseBackend()) {
+    const row = certificationModelToRow(data);
+    const { data: inserted, error } = await supabase
+      .from('certifications')
+      .insert(row)
+      .select('id')
+      .single();
+
+    if (error) {
+      console.error('Supabase addCertification error:', error);
+      throw error;
+    }
+    return inserted.id;
+  }
+
   const certsRef = collection(db, CERTIFICATIONS_COLLECTION).withConverter(
     createConverter<Certification>()
   );
@@ -51,6 +100,17 @@ export async function updateCertification(
   id: string,
   data: Partial<Certification>
 ): Promise<void> {
+  if (isSupabaseBackend()) {
+    const row = certificationModelToRow(data);
+    const { error } = await supabase.from('certifications').update(row).eq('id', id);
+
+    if (error) {
+      console.error('Supabase updateCertification error:', error);
+      throw error;
+    }
+    return;
+  }
+
   const docRef = doc(db, CERTIFICATIONS_COLLECTION, id);
   await updateDoc(docRef, {
     ...data,
@@ -59,6 +119,15 @@ export async function updateCertification(
 }
 
 export async function deleteCertification(id: string): Promise<void> {
+  if (isSupabaseBackend()) {
+    const { error } = await supabase.from('certifications').delete().eq('id', id);
+    if (error) {
+      console.error('Supabase deleteCertification error:', error);
+      throw error;
+    }
+    return;
+  }
+
   const docRef = doc(db, CERTIFICATIONS_COLLECTION, id);
   await deleteDoc(docRef);
 }
@@ -66,6 +135,20 @@ export async function deleteCertification(id: string): Promise<void> {
 export function subscribeToCertifications(
   callback: (certsList: Certification[]) => void
 ): () => void {
+  if (isSupabaseBackend()) {
+    let isMounted = true;
+    getCertificationsList()
+      .then((data) => {
+        if (isMounted) callback(data);
+      })
+      .catch((error) => {
+        console.warn('Certifications fetch error:', error);
+      });
+    return () => {
+      isMounted = false;
+    };
+  }
+
   const certsRef = collection(db, CERTIFICATIONS_COLLECTION).withConverter(
     createConverter<Certification>()
   );

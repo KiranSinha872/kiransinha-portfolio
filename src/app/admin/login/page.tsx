@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/lib/firebase/auth-context';
 import { auth } from '@/lib/firebase/client';
+import { isSupabaseBackend } from '@/lib/services/backend';
 import FadeIn from '@/components/motion/FadeIn';
 
 const MAX_FAILED_ATTEMPTS = 5;
@@ -49,15 +50,21 @@ export default function AdminLoginPage() {
 
   const isLocked = lockoutRemaining > 0;
 
-  const mapAuthError = (code: string): string => {
-    switch (code) {
+  const mapAuthError = (codeOrMessage: string): string => {
+    switch (codeOrMessage) {
       case 'auth/user-not-found':
       case 'auth/wrong-password':
       case 'auth/invalid-credential':
       case 'auth/invalid-email':
+      case 'invalid_credentials':
+      case 'Invalid login credentials':
         // Generic response prevents username/email enumeration
         return 'Invalid email or password. Please verify your credentials and try again.';
+      case 'auth/not-authorized':
+      case 'not_authorized':
+        return 'Not authorized: Your account does not have administrative privileges.';
       case 'auth/too-many-requests':
+      case 'over_request_rate_limit':
         return 'Too many failed login attempts. Access is temporarily locked. Please wait a few minutes before trying again.';
       case 'auth/user-disabled':
         return 'This administrative account has been deactivated.';
@@ -77,9 +84,16 @@ export default function AdminLoginPage() {
       return;
     }
 
-    if (!auth.app.options.apiKey) {
-      setError('Authentication service is not properly configured.');
-      return;
+    if (isSupabaseBackend()) {
+      if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+        setError('Supabase authentication service is not properly configured.');
+        return;
+      }
+    } else {
+      if (!auth.app.options.apiKey) {
+        setError('Authentication service is not properly configured.');
+        return;
+      }
     }
 
     setLoading(true);
@@ -100,8 +114,10 @@ export default function AdminLoginPage() {
         setLockoutRemaining(LOCKOUT_SECONDS);
         setError(`Too many consecutive failed attempts. Sign-in is locked for ${LOCKOUT_SECONDS} seconds.`);
       } else if (err && typeof err === 'object' && 'code' in err) {
-        const firebaseError = err as { code: string };
-        setError(mapAuthError(firebaseError.code));
+        const errorWithCode = err as { code: string };
+        setError(mapAuthError(errorWithCode.code));
+      } else if (err instanceof Error) {
+        setError(mapAuthError(err.message));
       } else {
         setError('Authentication failed. Please verify your credentials and try again.');
       }

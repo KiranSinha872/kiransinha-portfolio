@@ -30,6 +30,8 @@ try {
 }
 
 const storage: FirebaseStorage = getStorage(app);
+storage.maxUploadRetryTime = 6000;
+storage.maxOperationRetryTime = 6000;
 
 // Initialize Firebase App Check safely (Client-side only)
 let appCheck: AppCheck | undefined;

@@ -1,11 +1,8 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
 import {
-  User,
   Upload,
-  Loader2,
   FileText,
   Eye,
   Download,
@@ -15,80 +12,22 @@ import type { Profile } from '@/types';
 
 interface ProfileMediaSectionProps {
   formData: Partial<Profile>;
-  uploadingImage: boolean;
   uploadingResume: boolean;
-  onImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onResumeUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onRemoveAvatar: () => void;
   onRemoveResume: () => void;
   onPreviewResume: () => void;
 }
 
 export default function ProfileMediaSection({
   formData,
-  uploadingImage,
   uploadingResume,
-  onImageChange,
   onResumeUpload,
-  onRemoveAvatar,
   onRemoveResume,
   onPreviewResume,
 }: ProfileMediaSectionProps) {
   return (
     <>
-      {/* Profile Picture Section */}
-      <div className="p-4 border border-gray-200 rounded bg-gray-50 flex flex-col sm:flex-row items-center gap-4">
-        <div className="relative w-24 h-24 rounded border border-gray-300 overflow-hidden bg-white shrink-0 flex items-center justify-center">
-          {formData.avatarUrl ? (
-            <Image
-              src={formData.avatarUrl}
-              alt="Profile avatar preview"
-              fill
-              sizes="96px"
-              className="object-cover"
-            />
-          ) : (
-            <User className="w-8 h-8 text-gray-400" />
-          )}
-          {uploadingImage && (
-            <div className="absolute inset-0 bg-white/80 flex items-center justify-center">
-              <Loader2 className="w-5 h-5 animate-spin" />
-            </div>
-          )}
-        </div>
-
-        <div className="space-y-1 text-center sm:text-left">
-          <h3 className="text-xs font-semibold text-gray-800">Avatar Photo</h3>
-          <p className="text-[11px] text-gray-500">
-            Upload and crop a portrait photo.
-          </p>
-          <div className="pt-2 flex flex-wrap justify-center sm:justify-start gap-2">
-            <label className="cursor-pointer inline-flex items-center gap-1 px-2.5 py-1 border border-gray-300 bg-white text-xs text-gray-700 hover:bg-gray-100 rounded">
-              <Upload className="w-3.5 h-3.5" />
-              <span>{uploadingImage ? 'Uploading...' : 'Choose Photo'}</span>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={onImageChange}
-                disabled={uploadingImage}
-                className="hidden"
-              />
-            </label>
-
-            {formData.avatarUrl && (
-              <button
-                type="button"
-                onClick={onRemoveAvatar}
-                className="px-2 py-1 text-xs text-red-600 hover:underline"
-              >
-                Remove Picture
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Resume Upload */}
+      {/* Resume Document Upload */}
       <div className="p-4 border border-gray-200 rounded bg-gray-50 space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
@@ -97,11 +36,11 @@ export default function ProfileMediaSection({
               <span>Resume Document (PDF)</span>
             </label>
             <p className="text-[11px] text-gray-500 mt-0.5">
-              Upload your latest resume PDF.
+              Upload your latest resume PDF for the public &apos;View Resume&apos; button.
             </p>
           </div>
 
-          <label className="cursor-pointer inline-flex items-center gap-1 px-3 py-1.5 border border-gray-900 bg-gray-900 text-white text-xs rounded hover:bg-gray-800">
+          <label className="cursor-pointer inline-flex items-center gap-1 px-3 py-1.5 border border-gray-900 bg-gray-900 text-white text-xs rounded hover:bg-gray-800 transition-colors">
             <Upload className="w-3.5 h-3.5" />
             <span>
               {uploadingResume
@@ -131,7 +70,7 @@ export default function ProfileMediaSection({
               <button
                 type="button"
                 onClick={onPreviewResume}
-                className="inline-flex items-center gap-1 px-2 py-1 border border-gray-300 rounded hover:bg-gray-50 text-gray-700"
+                className="inline-flex items-center gap-1 px-2 py-1 border border-gray-300 rounded hover:bg-gray-50 text-gray-700 cursor-pointer"
               >
                 <Eye className="w-3.5 h-3.5" />
                 <span>Preview</span>
@@ -149,7 +88,7 @@ export default function ProfileMediaSection({
               <button
                 type="button"
                 onClick={onRemoveResume}
-                className="p-1 text-red-600 hover:text-red-800"
+                className="p-1 text-red-600 hover:text-red-800 cursor-pointer"
                 title="Remove Resume"
               >
                 <Trash2 className="w-3.5 h-3.5" />

@@ -43,6 +43,8 @@ rules_version = '2';
 //   - grade: string (optional, 0-100 chars)
 //   - location: string (optional, 0-100 chars)
 //   - description: string (optional, 0-5000 chars)
+//   - logoUrl: string (optional, 0-1000 chars)
+//   - logoPath: string (optional, 0-500 chars)
 //   - order: number (optional)
 //   - createdAt: string/timestamp (optional, max 50 chars)
 //   - updatedAt: string/timestamp (optional, max 50 chars)
@@ -210,6 +212,7 @@ service cloud.firestore {
       return hasOnlyAllowedFields([
         'institution', 'degree', 'fieldOfStudy', 'startDate', 'endDate',
         'isCurrent', 'grade', 'location', 'description', 'order',
+        'logoUrl', 'logoPath',
         'createdAt', 'updatedAt', 'id'
       ]) &&
       hasRequiredFields(['institution', 'degree']) &&
@@ -223,6 +226,8 @@ service cloud.firestore {
       isValidOptionalString(data, 'grade', 0, 100) &&
       isValidOptionalString(data, 'location', 0, 100) &&
       isValidOptionalString(data, 'description', 0, 5000) &&
+      isValidOptionalString(data, 'logoUrl', 0, 1000) &&
+      isValidOptionalString(data, 'logoPath', 0, 500) &&
       isValidOptionalNumber(data, 'order') &&
       isValidOptionalDate(data, 'createdAt') &&
       isValidOptionalDate(data, 'updatedAt');

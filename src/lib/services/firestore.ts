@@ -29,6 +29,7 @@ export {
   addEducation,
   updateEducation,
   deleteEducation,
+  deleteEducationLogoFile,
   subscribeToEducation,
 } from './education';
 

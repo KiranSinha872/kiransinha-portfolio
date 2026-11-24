@@ -41,6 +41,8 @@ export interface Education {
   grade?: string;
   description?: string;
   location?: string;
+  logoUrl?: string;
+  logoPath?: string;
   order?: number;
   createdAt?: string;
   updatedAt?: string;

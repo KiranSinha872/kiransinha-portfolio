@@ -1,68 +1,79 @@
 'use client';
 
 import type { Profile } from '@/types';
-import { UserCheck, MapPin, Sparkles } from 'lucide-react';
-import FadeIn from '@/components/motion/FadeIn';
-import AnimatedText from '@/components/motion/AnimatedText';
+import { MapPin, Sparkles, UserCheck } from 'lucide-react';
+import Container from '@/components/ui/Container';
+import SectionHeading from '@/components/ui/SectionHeading';
 
 interface AboutProps {
   profile?: Profile | null;
 }
 
 export default function PublicAbout({ profile }: AboutProps) {
-  const aboutText =
+  const rawBio =
     profile?.about ||
     profile?.bio ||
-    'I am a first-year B.Tech student specializing in Artificial Intelligence & Machine Learning, with a strong interest in Data Structures & Algorithms, Backend Development, and Data Science. I enjoy building practical, real-world applications and have hands-on experience with C++, Python, JavaScript, Node.js, Express.js, MongoDB, and REST APIs.';
-  const location = profile?.location !== undefined ? profile.location : 'Delhi';
-  const focusArea = profile?.focusArea !== undefined ? profile.focusArea : 'Full-Stack & Cloud Architecture';
-  const mindset = profile?.mindset !== undefined ? profile.mindset : 'Continuous Learner';
+    'I am a B.Tech student specializing in Artificial Intelligence & Machine Learning, with a strong interest in Data Structures & Algorithms, Backend Development, and Cloud Computing. I enjoy building practical, real-world applications and scalable architectures.';
+
+  // Remove any conflicting academic year references (e.g. "first-year", "1st year")
+  // so Hero and About can never disagree
+  const sanitizedBio = rawBio
+    .replace(/\b(first|second|third|fourth|1st|2nd|3rd|4th)[-\s]year\b/gi, '')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+
+  const location = profile?.location?.trim();
+  const focusArea = profile?.focusArea?.trim();
+  const mindset = profile?.mindset?.trim();
 
   return (
-    <section id="about" className="py-24 sm:py-32 relative overflow-hidden bg-[#0C0C0C]">
-      {/* Background Subtle Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-gradient-to-r from-transparent via-[#BBCCD7]/5 to-transparent blur-3xl pointer-events-none -z-0" />
-
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10 text-center">
-        {/* Centered Large Gradient-Text Heading */}
-        <FadeIn y={20}>
-          <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight gradient-text mb-8 sm:mb-12">
-            About Me
-          </h2>
-        </FadeIn>
-
-        {/* Character-by-character Scroll-Reveal Animated Bio Paragraph */}
-        <div className="my-6">
-          <AnimatedText
-            text={aboutText}
-            className="text-xl sm:text-2xl md:text-3xl font-light text-[#EDEDED] leading-relaxed max-w-3xl mx-auto tracking-wide selection:bg-white/20"
+    <section id="about" className="py-16 sm:py-24 bg-[#F1F1F1] border-b border-[#DADADA]">
+      <Container>
+        <div className="max-w-3xl">
+          {/* Section Label + Title */}
+          <SectionHeading
+            label="ABOUT"
+            title="About Me"
           />
-        </div>
 
-        {/* Interactive Highlight Badges */}
-        <FadeIn delay={0.3} y={20}>
-          <div className="mt-12 pt-8 border-t border-white/10 flex flex-wrap items-center justify-center gap-3 text-xs">
-            {location && location.trim() && (
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white/90 backdrop-blur-sm">
-                <MapPin className="w-3.5 h-3.5 text-[#BBCCD7]" />
+          {/* Clean Bio Paragraph */}
+          <p className="mt-6 text-base sm:text-lg text-[#121212] leading-relaxed font-normal">
+            {sanitizedBio}
+          </p>
+
+          {/* Data Chips (location, focus areas, status) */}
+          <div className="mt-8 flex flex-wrap items-center gap-2.5">
+            {location && (
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#DADADA] text-xs font-medium text-[#121212]">
+                <MapPin className="w-3.5 h-3.5 text-[#0B7658]" />
                 <span>Based in {location}</span>
               </div>
             )}
-            {focusArea && focusArea.trim() && (
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white/90 backdrop-blur-sm">
-                <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+
+            {focusArea && (
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#DADADA] text-xs font-medium text-[#121212]">
+                <Sparkles className="w-3.5 h-3.5 text-[#0B7658]" />
                 <span>{focusArea}</span>
               </div>
             )}
-            {mindset && mindset.trim() && (
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white/90 backdrop-blur-sm">
-                <UserCheck className="w-3.5 h-3.5 text-[#BBCCD7]" />
+
+            {mindset ? (
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#DADADA] text-xs font-medium text-[#121212]">
+                <UserCheck className="w-3.5 h-3.5 text-[#0B7658]" />
                 <span>{mindset}</span>
+              </div>
+            ) : (
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#DADADA] text-xs font-medium text-[#121212]">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#0B7658] opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#0B7658]"></span>
+                </span>
+                <span>Available for Opportunities</span>
               </div>
             )}
           </div>
-        </FadeIn>
-      </div>
+        </div>
+      </Container>
     </section>
   );
 }

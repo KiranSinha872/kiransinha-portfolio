@@ -1,16 +1,32 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: var(--font-dm-sans), system-ui, -apple-system, sans-serif;
+  --font-heading: var(--font-bebas), var(--font-anton), sans-serif;
+  --font-bebas: var(--font-bebas), sans-serif;
+  --font-serif-num: var(--font-dm-serif), Georgia, serif;
+  --font-kanit: var(--font-kanit), system-ui, -apple-system, sans-serif;
+
+  --color-bg-light: #F9F9F9;
+  --color-bg-alt: #F1F1F1;
+  --color-text-main: #121212;
+  --color-text-muted: #5B5B5B;
+  --color-divider: #DADADA;
+  --color-accent-emerald: #0B7658;
+  --color-accent-emerald-hover: #096148;
+}
+
 :root {
-  --background: #0C0C0C;
-  --foreground: #EDEDED;
-  --muted: #8E9BAE;
-  --card-bg: #141414;
-  --card-border: rgba(255, 255, 255, 0.08);
+  --bg-light: #F9F9F9;
+  --bg-alt: #F1F1F1;
+  --text-main: #121212;
+  --text-muted: #5B5B5B;
+  --divider: #DADADA;
+  --accent-emerald: #0B7658;
 }
 
 html {
   scroll-behavior: smooth;
-  color-scheme: dark;
 }
 
 body {
@@ -22,7 +38,29 @@ body {
   overflow-x: hidden;
 }
 
-/* 3D Creator Metallic Gradient Text Heading */
+/* Public site shell — Light, clean, generous spacing, high contrast */
+.public-site {
+  background-color: #F9F9F9;
+  color: #121212;
+  font-family: var(--font-dm-sans), system-ui, -apple-system, sans-serif;
+}
+
+.public-site :focus-visible {
+  outline: 2px solid #0B7658;
+  outline-offset: 2px;
+}
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Legacy metallic gradients & surfaces (kept for admin / transition) */
 .gradient-text {
   background: linear-gradient(180deg, #646973 0%, #BBCCD7 100%);
   -webkit-background-clip: text;
@@ -37,7 +75,6 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
-/* Subtle Metallic Surfaces & Borders */
 .surface-card {
   background-color: #141414;
   border: 1px solid rgba(255, 255, 255, 0.08);
