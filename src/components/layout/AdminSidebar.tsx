@@ -94,6 +94,7 @@ export default function AdminSidebar() {
         <Link
           href="/"
           target="_blank"
+          rel="noopener noreferrer"
           className="flex items-center justify-between px-3 py-2 text-xs text-[#8E9BAE] hover:text-white hover:bg-white/5 rounded-xl transition-colors"
         >
           <span className="flex items-center gap-2">

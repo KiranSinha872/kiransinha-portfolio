@@ -42,6 +42,8 @@ export default function ContactSection({ profile }: ContactSectionProps) {
 
     let widgetId: string | null = null;
     let isMounted = true;
+    let scriptLoadedListener: (() => void) | null = null;
+    let attachedScript: Element | null = null;
 
     const renderWidget = () => {
       if (
@@ -87,12 +89,17 @@ export default function ContactSection({ profile }: ContactSectionProps) {
         script.onload = () => renderWidget();
         document.head.appendChild(script);
       } else {
-        existingScript.addEventListener('load', renderWidget);
+        scriptLoadedListener = renderWidget;
+        attachedScript = existingScript;
+        existingScript.addEventListener('load', scriptLoadedListener);
       }
     }
 
     return () => {
       isMounted = false;
+      if (attachedScript && scriptLoadedListener) {
+        attachedScript.removeEventListener('load', scriptLoadedListener);
+      }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if (widgetId && typeof window !== 'undefined' && (window as any).turnstile) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

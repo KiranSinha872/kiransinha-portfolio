@@ -24,15 +24,11 @@ export default function PublicHero({ profile }: HeroProps) {
   const lastName = nameParts.slice(1).join(' ') || 'SINHA';
 
   // Subtitle from profile title
-  const rawTitle = profile?.title || profile?.headline || profile?.tagline;
   const title =
-    !rawTitle ||
-    rawTitle === 'Full-Stack Software Engineer & Cloud Architect.' ||
-    rawTitle === 'Full-Stack Software Engineer & Cloud Architect' ||
-    rawTitle === 'Full-Stack Software Engineer' ||
-    rawTitle === 'B.Tech AI/ML Student'
-      ? 'B.Tech AI/ML Student | Aspiring Software Engineer'
-      : rawTitle;
+    profile?.title ||
+    profile?.headline ||
+    profile?.tagline ||
+    'B.Tech AI/ML Student | Aspiring Software Engineer';
 
   // Short intro line from the bio
   const bio =

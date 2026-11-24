@@ -10,17 +10,11 @@ interface AboutProps {
 }
 
 export default function PublicAbout({ profile }: AboutProps) {
-  const rawBio =
+  const bio = (
     profile?.about ||
     profile?.bio ||
-    'I am a B.Tech student specializing in Artificial Intelligence & Machine Learning, with a strong interest in Data Structures & Algorithms, Backend Development, and Cloud Computing. I enjoy building practical, real-world applications and scalable architectures.';
-
-  // Remove any conflicting academic year references (e.g. "first-year", "1st year")
-  // so Hero and About can never disagree
-  const sanitizedBio = rawBio
-    .replace(/\b(first|second|third|fourth|1st|2nd|3rd|4th)[-\s]year\b/gi, '')
-    .replace(/\s{2,}/g, ' ')
-    .trim();
+    'I am a B.Tech student specializing in Artificial Intelligence & Machine Learning, with a strong interest in Data Structures & Algorithms, Backend Development, and Cloud Computing. I enjoy building practical, real-world applications and scalable architectures.'
+  ).trim();
 
   const location = profile?.location?.trim();
   const focusArea = profile?.focusArea?.trim();
@@ -38,7 +32,7 @@ export default function PublicAbout({ profile }: AboutProps) {
 
           {/* Clean Bio Paragraph */}
           <p className="mt-6 text-base sm:text-lg text-[#121212] leading-relaxed font-normal">
-            {sanitizedBio}
+            {bio}
           </p>
 
           {/* Data Chips (location, focus areas, status) */}
