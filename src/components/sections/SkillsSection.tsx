@@ -33,7 +33,7 @@ const DEFAULT_SKILLS: Skill[] = [
   { name: 'Express.js', category: 'Backend', proficiency: 84 },
   { name: 'REST & GraphQL APIs', category: 'Backend', proficiency: 82 },
   { name: 'PostgreSQL', category: 'Database', proficiency: 80 },
-  { name: 'Firestore & Firebase', category: 'Database', proficiency: 85 },
+  { name: 'PostgreSQL & Supabase', category: 'Database', proficiency: 90 },
   { name: 'Git & GitHub', category: 'Tools', proficiency: 88 },
   { name: 'Docker', category: 'Tools' },
   { name: 'VS Code & Postman', category: 'Tools' },

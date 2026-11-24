@@ -14,7 +14,7 @@ import {
   Loader2,
   Shield,
 } from 'lucide-react';
-import { useAuth } from '@/lib/firebase/auth-context';
+import { useAuth } from '@/lib/supabase/auth-context';
 import { useState } from 'react';
 
 export const ADMIN_TABS = [

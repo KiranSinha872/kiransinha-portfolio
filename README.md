@@ -1,32 +1,33 @@
 # Kiran Sinha — Personal Portfolio & CMS
 
-> High-performance personal portfolio and dynamic administrative content management system built with Next.js (App Router, Turbopack), React 19, TypeScript, Tailwind CSS, and Firebase.
+> High-performance personal portfolio and dynamic administrative content management system built with Next.js (App Router, Turbopack), React 19, TypeScript, Tailwind CSS, and Supabase.
 
 [![Next.js](https://img.shields.io/badge/Next.js-16.3-black?logo=next.js)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.2-blue?logo=react)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue?logo=typescript)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
-[![Firebase](https://img.shields.io/badge/Firebase-Firestore%20%7C%20Auth%20%7C%20Storage-FFCA28?logo=firebase)](https://firebase.google.com/)
+[![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL%20%7C%20Auth%20%7C%20Storage-3ECF8E?logo=supabase)](https://supabase.com/)
 
 ---
 
 ## ✨ Features
 
 - **Public Presentation**:
-  - Hero header with custom interactive Vanta birds canvas background.
-  - Video banner and responsive coding profiles showcasing LeetCode, CodeChef, Codeforces, and GitHub.
+  - Editorial hero header with clean typography, dynamic tagline, and current year display.
+  - Video showcase and responsive coding profiles featuring LeetCode, CodeChef, Codeforces, and GitHub.
   - Dynamic skill badges categorized into Frontend, Backend, Tools & Cloud, and Core CS.
-  - Featured projects with tags, live links, repository links, and interactive image modals.
-  - Formal timeline views for education and verified certification credentials.
-  - Responsive contact form with server-side validation and anti-abuse safeguards.
+  - Featured projects with live preview links, GitHub repositories, and full-screen image preview.
+  - Interactive timeline views for education and verified certification credentials.
+  - Secure contact form with server-side validation, rate limiting, and Cloudflare Turnstile bot protection.
 - **Administrative CMS (`/admin`)**:
-  - Secure dashboard for editing profile details, avatar photos, resume documents, and social links.
+  - Secure dashboard for updating profile details, avatar photos, resume documents, and social links.
   - Interactive client-side image cropper with custom aspect ratios (`16:9`, `4:3`, `1:1`).
   - Full CRUD operations over skills, projects, certifications, education, and contact submissions.
 - **Security & Reliability**:
-  - Strict Firebase Security Rules with default-deny, type and length bounds, and admin UID allowlisting.
-  - Firebase App Check support (reCAPTCHA v3) with zero-downtime deployment guidance.
-  - Comprehensive HTTP security headers (CSP, HSTS, X-Content-Type-Options, Referrer-Policy).
+  - PostgreSQL Row Level Security (RLS) policies enforcing public read and strict admin-only write access via `public.admins`.
+  - Supabase Storage buckets (`profile`, `projects`, `education`, `certifications`, `resumes`) with explicit RLS rules and size limits.
+  - Cloudflare Turnstile bot verification on the contact endpoint.
+  - Strict Content Security Policy (CSP), HSTS, X-Content-Type-Options, and Referrer-Policy headers.
   - Admin routes protected with `noindex` robots directives and `Cache-Control: no-store`.
 
 ---
@@ -35,9 +36,9 @@
 
 - **Framework**: Next.js (App Router, Turbopack)
 - **UI & Styling**: React 19, Tailwind CSS v4, Lucide Icons
-- **Motion & Visuals**: Framer Motion, Three.js, Vanta.js
-- **Database & Storage**: Google Cloud Firestore & Cloud Storage
-- **Authentication**: Firebase Authentication (Email/Password)
+- **Database & Storage**: Supabase (PostgreSQL 15 & S3-Compatible Storage)
+- **Authentication**: Supabase Auth (Email/Password with role verification via `public.admins`)
+- **Bot Protection**: Cloudflare Turnstile
 - **Validation**: Zod (Environment variables & Form input)
 
 ---
@@ -51,28 +52,26 @@ All application source code resides under `src/`:
 ├── docs/                            # Architectural, security, and audit reports
 │   ├── ARCHITECTURE.md              # Detailed system design and directory breakdown
 │   ├── AUDIT.md                     # Codebase vulnerability and structure audit
-│   └── SECURITY.md                  # Security policies, API key restriction, and App Check guide
-├── firestore.rules                  # Production-hardened Firestore security rules
-├── storage.rules                    # Production-hardened Cloud Storage security rules
+│   └── SECURITY.md                  # Security policies, RLS, and Turnstile configuration
+├── supabase/                        # Supabase SQL schema migrations and seed scripts
 ├── public/                          # Static public assets
 ├── src/
 │   ├── app/                         # App Router (pages, layouts, dynamic OG/Twitter metadata)
 │   │   ├── (public)/                # Public portfolio landing page
-│   │   └── admin/                   # Administrative management interfaces
+│   │   ├── admin/                   # Administrative management interfaces
+│   │   └── api/                     # Serverless API endpoints (e.g. /api/contact)
 │   ├── components/
-│   │   ├── admin/                   # Admin manager interfaces and modals (<300 lines each)
-│   │   ├── backgrounds/             # Interactive canvas and background video components
-│   │   ├── layout/                  # Navbar, Footer, AdminHeader, AdminSidebar
-│   │   ├── motion/                  # Animation wrappers (AnimatedText, FadeIn, Magnet)
+│   │   ├── admin/                   # Admin manager interfaces and modals
+│   │   ├── layout/                  # PublicHeader, PublicFooter, AdminHeader, AdminSidebar
 │   │   ├── sections/                # Modular landing page sections
 │   │   └── ui/                      # Reusable UI widgets, loaders, and modals
 │   ├── lib/
 │   │   ├── env.ts                   # Fail-fast Zod-validated environment config
-│   │   ├── firebase/                # Firebase client init & React Auth Context
-│   │   ├── services/                # Firestore and Storage service layer
-│   │   └── utils/                   # Helper functions (crop, transforms)
+│   │   ├── supabase/                # Supabase browser/server client & Auth Context
+│   │   ├── services/                # Database and Storage service layer
+│   │   └── utils/                   # Helper functions (crop, transforms, skill icons)
 │   └── types/                       # Shared TypeScript type definitions
-└── tests/                           # Security rules and unit test suites
+└── tests/                           # Unit tests (auth, contact, mappers)
 ```
 
 ---
@@ -83,15 +82,11 @@ Create `.env.local` based on `.env.example`:
 
 | Variable | Scope | Description |
 |---|---|---|
-| `NEXT_PUBLIC_FIREBASE_API_KEY` | Public / Client | Firebase Web API Key |
-| `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` | Public / Client | Firebase Auth domain (`project.firebaseapp.com`) |
-| `NEXT_PUBLIC_FIREBASE_PROJECT_ID` | Public / Client | Google Cloud / Firebase Project ID |
-| `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` | Public / Client | Cloud Storage bucket (`project.firebasestorage.app`) |
-| `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | Public / Client | Cloud Messaging sender identifier |
-| `NEXT_PUBLIC_FIREBASE_APP_ID` | Public / Client | Firebase Web application identifier |
-| `NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID` | Public / Client (Optional) | Google Analytics 4 measurement ID |
-| `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` | Public / Client (Optional) | reCAPTCHA v3 site key for Firebase App Check |
-| `NEXT_PUBLIC_APPCHECK_DEBUG_TOKEN` | Public / Client (Dev only) | Set to `true` in local development to debug App Check |
+| `NEXT_PUBLIC_SUPABASE_URL` | Public / Client | Supabase Project URL (`https://<project-ref>.supabase.co`) |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public / Client | Supabase Anon Public API Key |
+| `SUPABASE_SERVICE_ROLE_KEY` | Server-only (Optional) | Supabase Service Role Secret Key (admin/migrations) |
+| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Public / Client | Cloudflare Turnstile Site Key for bot verification |
+| `TURNSTILE_SECRET_KEY` | Server-only | Cloudflare Turnstile Secret Key for backend token verification |
 
 ---
 
@@ -111,7 +106,7 @@ Create `.env.local` based on `.env.example`:
 3. **Configure environment**:
    ```bash
    cp .env.example .env.local
-   # Fill in your Firebase configuration values in .env.local
+   # Fill in your Supabase and Turnstile configuration values in .env.local
    ```
 
 4. **Start the development server**:
@@ -130,21 +125,18 @@ Create `.env.local` based on `.env.example`:
 3. In Project Settings > **Environment Variables**, add the variables from `.env.example`.
 4. Deploy.
 
-### 2. Deploy Firebase Rules
-To deploy your Firestore and Cloud Storage security rules:
-```bash
-# Set your active Firebase project
-firebase use <YOUR_FIREBASE_PROJECT_ID>
-
-# Deploy rules
-firebase deploy --only firestore:rules,storage
-```
+### 2. Supabase Database Setup
+1. Apply the schema in `supabase/migrations/` using the Supabase SQL Editor.
+2. Register your admin user ID in the `public.admins` table:
+   ```sql
+   INSERT INTO public.admins (user_id) VALUES ('<YOUR_SUPABASE_AUTH_UID>') ON CONFLICT (user_id) DO NOTHING;
+   ```
 
 ---
 
 ## 🔒 Security Hardening
 
-For complete security instructions, API key restrictions, and App Check activation procedures, refer to [docs/SECURITY.md](docs/SECURITY.md).
+For complete security instructions, RLS policies, and Turnstile configuration, refer to [docs/SECURITY.md](docs/SECURITY.md).
 
 ---
 

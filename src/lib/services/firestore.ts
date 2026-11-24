@@ -13,7 +13,6 @@ export const COLLECTIONS = {
 } as const;
 
 export { PROFILE_DOC_ID } from './profile';
-export { createConverter } from './converter';
 
 // Profile operations
 export {

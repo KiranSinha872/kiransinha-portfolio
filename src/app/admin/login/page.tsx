@@ -13,9 +13,7 @@ import {
   Loader2,
   ShieldCheck,
 } from 'lucide-react';
-import { useAuth } from '@/lib/firebase/auth-context';
-import { auth } from '@/lib/firebase/client';
-import { isSupabaseBackend } from '@/lib/services/backend';
+import { useAuth } from '@/lib/supabase/auth-context';
 import FadeIn from '@/components/motion/FadeIn';
 
 const MAX_FAILED_ATTEMPTS = 5;
@@ -84,16 +82,9 @@ export default function AdminLoginPage() {
       return;
     }
 
-    if (isSupabaseBackend()) {
-      if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-        setError('Supabase authentication service is not properly configured.');
-        return;
-      }
-    } else {
-      if (!auth.app.options.apiKey) {
-        setError('Authentication service is not properly configured.');
-        return;
-      }
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      setError('Authentication service is not properly configured.');
+      return;
     }
 
     setLoading(true);
@@ -245,7 +236,7 @@ export default function AdminLoginPage() {
 
           <div className="mt-6 pt-4 border-t border-white/5 text-center">
             <span className="text-[11px] text-[#8E9BAE]/60 font-light">
-              Secured with Firebase Authentication & Role Enforcement
+              Secured with Supabase Authentication & Role Enforcement
             </span>
           </div>
         </div>

@@ -50,7 +50,7 @@ export const metadata: Metadata = {
     'TypeScript',
     'React',
     'Tailwind CSS',
-    'Firebase',
+    'Supabase',
     'Cloud Architecture',
     'Web Developer Portfolio',
   ],

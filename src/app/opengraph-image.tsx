@@ -164,7 +164,7 @@ export default async function OpenGraphImage() {
             gap: '14px',
           }}
         >
-          {['Next.js & TypeScript', 'Artificial Intelligence & ML', 'Full-Stack Architecture', 'Cloud & Firebase'].map(
+          {['Next.js & TypeScript', 'Artificial Intelligence & ML', 'Full-Stack Architecture', 'Cloud & PostgreSQL'].map(
             (tag) => (
               <div
                 key={tag}

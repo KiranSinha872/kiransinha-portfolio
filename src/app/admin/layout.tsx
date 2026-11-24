@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { AuthProvider, useAuth } from '@/lib/firebase/auth-context';
+import { AuthProvider, useAuth } from '@/lib/supabase/auth-context';
 import AdminSidebar from '@/components/layout/AdminSidebar';
 import AdminHeader from '@/components/layout/AdminHeader';
 import { Loader2 } from 'lucide-react';

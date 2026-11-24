@@ -1,7 +1,7 @@
 'use client';
 
 import { User, LogOut } from 'lucide-react';
-import { useAuth } from '@/lib/firebase/auth-context';
+import { useAuth } from '@/lib/supabase/auth-context';
 import { useRouter } from 'next/navigation';
 
 export default function AdminHeader() {

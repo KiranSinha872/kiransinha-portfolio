@@ -1,12 +1,4 @@
-import {
-  ref,
-  uploadBytes,
-  getDownloadURL,
-  deleteObject,
-} from 'firebase/storage';
-import { storage } from '@/lib/firebase/client';
 import { supabase } from '@/lib/supabase/client';
-import { isSupabaseBackend } from '@/lib/services/backend';
 
 export interface ProcessedLogoResult {
   file: File;
@@ -426,9 +418,7 @@ export async function uploadInstitutionLogoFile(
   const fileName = `${cleanId}-${timestamp}.${ext}`;
   const fullPath = `institutions/${fileName}`;
 
-  // Supabase Storage implementation
-  if (isSupabaseBackend()) {
-    onProgress?.(15);
+  onProgress?.(15);
 
     try {
       const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
@@ -527,58 +517,18 @@ export async function uploadInstitutionLogoFile(
     }
   }
 
-  // Firebase Storage fallback
-  const storageRef = ref(storage, fullPath);
-  onProgress?.(15);
-
-  const uploadPromise = (async () => {
-    onProgress?.(35);
-    const snapshot = await uploadBytes(storageRef, file, {
-      contentType: file.type,
-    });
-    onProgress?.(80);
-    const downloadUrl = await getDownloadURL(snapshot.ref);
-    onProgress?.(100);
-    return { logoUrl: downloadUrl, logoPath: fullPath };
-  })();
-
-  const timeoutPromise = new Promise<never>((_, reject) => {
-    setTimeout(() => {
-      reject(new Error('Upload timed out after 15 seconds.'));
-    }, timeoutMs);
-  });
-
-  try {
-    return await Promise.race([uploadPromise, timeoutPromise]);
-  } catch (err) {
-    console.error('Firebase Storage upload error:', err);
-    throw new Error(mapStorageError(err));
-  }
-}
-
 /**
- * Deletes a file from Storage by full storage path.
- * Supports both Supabase Storage and Firebase Storage.
+ * Deletes a file from Supabase Storage by full storage path.
  */
 export async function deleteStorageFile(storagePath: string): Promise<void> {
   if (!storagePath) return;
 
-  if (isSupabaseBackend()) {
-    try {
-      const cleanPath = storagePath.startsWith('institutions/')
-        ? storagePath.replace(/^institutions\//, '')
-        : storagePath;
-      await supabase.storage.from('institutions').remove([cleanPath]);
-    } catch (err) {
-      console.warn('Delete storage file failed on Supabase:', storagePath, err);
-    }
-    return;
-  }
-
   try {
-    const storageRef = ref(storage, storagePath);
-    await deleteObject(storageRef);
+    const cleanPath = storagePath.startsWith('institutions/')
+      ? storagePath.replace(/^institutions\//, '')
+      : storagePath;
+    await supabase.storage.from('institutions').remove([cleanPath]);
   } catch (err) {
-    console.warn('Delete storage file skipped or failed:', storagePath, err);
+    console.warn('Delete storage file failed on Supabase:', storagePath, err);
   }
 }

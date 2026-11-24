@@ -1,9 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { contactMessageSchema } from '@/lib/security/validation';
 import { createClient } from '@/lib/supabase/server';
-import { isSupabaseBackend } from '@/lib/services/backend';
-import { db } from '@/lib/firebase/client';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 // In-memory rate limiting map: IP -> { count, resetTime }
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
@@ -111,39 +108,27 @@ export async function POST(request: NextRequest) {
     const validated = validationResult.data;
 
     // 4. Server-side database insertion (no direct browser insertion)
-    if (isSupabaseBackend()) {
-      const supabase = await createClient();
-      const { data, error } = await supabase
-        .from('contact_messages')
-        .insert({
-          name: validated.name,
-          email: validated.email,
-          message: validated.message,
-          read: false,
-        })
-        .select('id')
-        .single();
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from('contact_messages')
+      .insert({
+        name: validated.name,
+        email: validated.email,
+        message: validated.message,
+        read: false,
+      })
+      .select('id')
+      .single();
 
-      if (error) {
-        console.error('Supabase contact insertion error:', error);
-        return NextResponse.json(
-          { error: 'Failed to record message in database.' },
-          { status: 500 }
-        );
-      }
-
-      return NextResponse.json({ success: true, id: data.id });
+    if (error) {
+      console.error('Supabase contact insertion error:', error);
+      return NextResponse.json(
+        { error: 'Failed to record message in database.' },
+        { status: 500 }
+      );
     }
 
-    // Firebase fallback insertion
-    const contactRef = collection(db, 'contact_messages');
-    const docRef = await addDoc(contactRef, {
-      ...validated,
-      read: false,
-      createdAt: serverTimestamp(),
-    });
-
-    return NextResponse.json({ success: true, id: docRef.id });
+    return NextResponse.json({ success: true, id: data.id });
   } catch (err) {
     console.error('Contact handler uncaught error:', err);
     return NextResponse.json(

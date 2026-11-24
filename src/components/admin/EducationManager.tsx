@@ -169,7 +169,7 @@ export default function EducationManager() {
       // Temporary preview during upload
       setForm((prev) => ({ ...prev, logoUrl: previewUrl }));
 
-      // 3. Stage 2: Upload to Firebase Storage with progress events
+      // 3. Stage 2: Upload to Supabase Storage with progress events
       setProcessingLogo(false);
       setUploadingLogo(true);
 
