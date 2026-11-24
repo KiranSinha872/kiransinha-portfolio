@@ -31,25 +31,25 @@ export default async function PortfolioPage() {
       {/* 1. Hero Section */}
       <PublicHero profile={profile} />
 
-      {/* 2. Selected Projects Section */}
-      <ProjectsSection projects={projects} profile={profile} />
-
-      {/* 3. About Section */}
+      {/* 2. About Section */}
       <PublicAbout profile={profile} />
 
-      {/* 4. Skills */}
+      {/* 3. Skills Section */}
       <SkillsSection skills={skills} />
 
-      {/* 5. Education */}
-      <EducationSection education={education} />
+      {/* 4. Projects Section */}
+      <ProjectsSection projects={projects} profile={profile} />
 
-      {/* 6. Certifications */}
+      {/* 5. Certifications Section */}
       <CertificationsSection certifications={certifications} />
 
-      {/* 7. Coding Profiles */}
+      {/* 6. Education Section */}
+      <EducationSection education={education} />
+
+      {/* 7. Competitive Programming & Open Source Section */}
       <CodingProfilesSection profile={profile} />
 
-      {/* 8. Contact */}
+      {/* 8. Contact Section (LET'S CONNECT) */}
       <ContactSection profile={profile} />
     </div>
   );

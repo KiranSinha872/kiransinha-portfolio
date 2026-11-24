@@ -8,11 +8,11 @@ import { subscribeToProfile } from '@/lib/services/firestore';
 import type { Profile } from '@/types';
 
 const NAV_LINKS = [
-  { name: 'Projects', href: '#projects' },
   { name: 'About', href: '#about' },
   { name: 'Skills', href: '#skills' },
-  { name: 'Education', href: '#education' },
+  { name: 'Projects', href: '#projects' },
   { name: 'Certifications', href: '#certifications' },
+  { name: 'Education', href: '#education' },
   { name: 'Profiles', href: '#coding-profiles' },
   { name: 'Contact', href: '#contact' },
 ];
