@@ -126,8 +126,8 @@ export default function PublicHero({ profile }: HeroProps) {
               <Image
                 src="/images/hero-kiran.png"
                 alt="Kiran Sinha"
-                width={512}
-                height={1018}
+                width={515}
+                height={1024}
                 priority
                 unoptimized
                 className="relative z-10 h-full w-auto block select-none pointer-events-none"
