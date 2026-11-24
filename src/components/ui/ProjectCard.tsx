@@ -8,9 +8,14 @@ import type { Project } from '@/types';
 interface ProjectCardProps {
   project: Project;
   index: number;
+  showDescription?: boolean;
 }
 
-export default function ProjectCard({ project, index }: ProjectCardProps) {
+export default function ProjectCard({
+  project,
+  index,
+  showDescription = false,
+}: ProjectCardProps) {
   const formattedNumber = String(index + 1).padStart(2, '0');
   const tags = Array.isArray(project.tags) ? project.tags : [];
   const primaryUrl = project.liveUrl || project.repoUrl || '';
@@ -75,30 +80,85 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
         )}
       </TileWrapper>
 
-      {/* d. Below the tile: one quiet line with "Source code" text link + plain muted tech stack separated by commas */}
-      <div className="mt-3 flex items-center justify-between text-xs text-[#5B5B5B] gap-2">
-        {project.repoUrl ? (
-          <a
-            href={project.repoUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline underline-offset-2 hover:text-[#0B7658] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#0B7658] shrink-0"
-          >
-            Source code
-          </a>
-        ) : (
-          <span className="text-[#5B5B5B]/60 text-[11px]">Private source</span>
-        )}
+      {/* d. Below the tile: Detailed description & tech stack if showDescription is true */}
+      {showDescription ? (
+        <div className="mt-4 flex flex-col flex-1 justify-between">
+          {project.description && (
+            <p className="text-xs sm:text-sm text-[#5B5B5B] leading-relaxed">
+              {project.description}
+            </p>
+          )}
 
-        {tags.length > 0 && (
-          <span
-            className="truncate text-right text-[11px] text-[#5B5B5B]"
-            title={tags.join(', ')}
-          >
-            {tags.join(', ')}
-          </span>
-        )}
-      </div>
+          {tags.length > 0 && (
+            <div className="mt-4 pt-3.5 border-t border-[#DADADA]">
+              <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.14em] text-[#121212] block mb-2">
+                Tech Stack
+              </span>
+              <div className="flex flex-wrap gap-1.5">
+                {tags.map((tech) => (
+                  <span
+                    key={tech}
+                    className="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-medium bg-white border border-[#DADADA] text-[#121212] transition-colors hover:border-[#0B7658] hover:text-[#0B7658]"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="mt-4 pt-3 flex items-center justify-between text-xs text-[#5B5B5B] border-t border-[#DADADA]">
+            <div className="flex items-center gap-4">
+              {project.liveUrl && (
+                <a
+                  href={project.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-semibold text-[#0B7658] hover:text-[#096148] transition-colors inline-flex items-center gap-1"
+                >
+                  <span>Live Demo</span>
+                  <span aria-hidden="true">↗</span>
+                </a>
+              )}
+              {project.repoUrl && (
+                <a
+                  href={project.repoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-2 hover:text-[#0B7658] transition-colors"
+                >
+                  Source code
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      ) : (
+        /* Default compact footer for home page grid */
+        <div className="mt-3 flex items-center justify-between text-xs text-[#5B5B5B] gap-2">
+          {project.repoUrl ? (
+            <a
+              href={project.repoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-2 hover:text-[#0B7658] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#0B7658] shrink-0"
+            >
+              Source code
+            </a>
+          ) : (
+            <span className="text-[#5B5B5B]/60 text-[11px]">Private source</span>
+          )}
+
+          {tags.length > 0 && (
+            <span
+              className="truncate text-right text-[11px] text-[#5B5B5B]"
+              title={tags.join(', ')}
+            >
+              {tags.join(', ')}
+            </span>
+          )}
+        </div>
+      )}
     </div>
   );
 }

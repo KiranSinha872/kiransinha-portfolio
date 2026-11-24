@@ -77,6 +77,7 @@ export default async function AllProjectsPage() {
                 key={project.id || project.slug || idx}
                 project={project}
                 index={idx}
+                showDescription={true}
               />
             ))}
           </div>

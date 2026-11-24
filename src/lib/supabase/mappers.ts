@@ -181,6 +181,16 @@ export function profileModelToRow(model: Partial<Profile>): Partial<ProfileRow> 
 // ==============================================================================
 
 export function projectRowToModel(row: ProjectRow): Project {
+  // Map distinct, accurate tech stack per project
+  let tags = Array.isArray(row.tags) ? row.tags : [];
+  if (row.slug === 'college-management-system') {
+    tags = ['Node.js', 'Express.js', 'MongoDB', 'Mongoose', 'EJS'];
+  } else if (row.slug === 'personal-portfolio') {
+    tags = ['Next.js', 'React 19', 'TypeScript', 'Tailwind CSS', 'Supabase'];
+  } else if (row.slug === 'currency-converter') {
+    tags = ['JavaScript', 'HTML5', 'CSS3', 'REST API'];
+  }
+
   return {
     id: row.id,
     title: row.title,
@@ -190,7 +200,7 @@ export function projectRowToModel(row: ProjectRow): Project {
     longDescription: row.long_description || undefined,
     thumbnailUrl: row.thumbnail_url || undefined,
     images: Array.isArray(row.images) ? row.images : [],
-    tags: Array.isArray(row.tags) ? row.tags : [],
+    tags,
     liveUrl: row.live_url || undefined,
     repoUrl: row.repo_url || undefined,
     featured: row.featured ?? false,
