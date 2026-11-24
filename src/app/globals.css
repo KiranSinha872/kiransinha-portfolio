@@ -2,10 +2,9 @@
 
 @theme {
   --font-sans: var(--font-dm-sans), system-ui, -apple-system, sans-serif;
-  --font-heading: var(--font-bebas), var(--font-anton), sans-serif;
+  --font-heading: var(--font-bebas), sans-serif;
   --font-bebas: var(--font-bebas), sans-serif;
   --font-serif-num: var(--font-dm-serif), Georgia, serif;
-  --font-kanit: var(--font-kanit), system-ui, -apple-system, sans-serif;
 
   --color-bg-light: #F9F9F9;
   --color-bg-alt: #F1F1F1;
@@ -34,7 +33,7 @@ body {
   padding: 0;
   background-color: #0C0C0C;
   color: #EDEDED;
-  font-family: var(--font-kanit), system-ui, -apple-system, sans-serif;
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
   overflow-x: hidden;
 }
 
@@ -60,29 +59,12 @@ body {
   }
 }
 
-/* Legacy metallic gradients & surfaces (kept for admin / transition) */
+/* Legacy metallic gradient (kept for admin / transition) */
 .gradient-text {
   background: linear-gradient(180deg, #646973 0%, #BBCCD7 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-}
-
-.gradient-text-light {
-  background: linear-gradient(180deg, #FFFFFF 20%, #8E9BAE 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.surface-card {
-  background-color: #141414;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.surface-pill {
-  background-color: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Disable drag-and-drop ghosting for all images, svg, and media */

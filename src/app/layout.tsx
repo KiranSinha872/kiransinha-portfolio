@@ -1,26 +1,12 @@
 import type { Metadata, Viewport } from 'next';
-import { Anton, Bebas_Neue, DM_Sans, DM_Serif_Display, Kanit } from 'next/font/google';
+import { Bebas_Neue, DM_Sans, DM_Serif_Display } from 'next/font/google';
 import { env } from '@/lib/env';
 import './globals.css';
-
-const kanit = Kanit({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700', '800', '900'],
-  variable: '--font-kanit',
-  display: 'swap',
-});
 
 const bebasNeue = Bebas_Neue({
   weight: '400',
   subsets: ['latin'],
   variable: '--font-bebas',
-  display: 'swap',
-});
-
-const anton = Anton({
-  weight: '400',
-  subsets: ['latin'],
-  variable: '--font-anton',
   display: 'swap',
 });
 
@@ -132,7 +118,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${kanit.variable} ${anton.variable} ${bebasNeue.variable} ${dmSans.variable} ${dmSerifDisplay.variable}`}
+      className={`${bebasNeue.variable} ${dmSans.variable} ${dmSerifDisplay.variable}`}
     >
       <body className="min-h-screen bg-[#0C0C0C] text-[#EDEDED] font-sans antialiased selection:bg-[#0B7658]/20 selection:text-[#0B7658]">
         {children}
