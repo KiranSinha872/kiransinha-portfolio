@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion, useReducedMotion } from 'framer-motion';
 import { FileText } from 'lucide-react';
+import { LinkedInIcon } from '@/components/ui/PlatformIcons';
 import Container from '@/components/ui/Container';
 import PublicResumeModal from '@/components/ui/PublicResumeModal';
 import type { Profile } from '@/types';
@@ -38,6 +39,9 @@ export default function PublicHero({ profile }: HeroProps) {
   const shortBio = bio.split(/(?<=[.!?])\s+/)[0] || bio;
 
   const resumeUrl = profile?.resumeUrl;
+  const linkedinUrl =
+    profile?.linkedinUrl ||
+    'https://www.linkedin.com/in/kiran-sinha-555510377/?skipRedirect=true';
 
   return (
     <section className="relative bg-[#F9F9F9] text-[#121212] border-b border-[#DADADA] overflow-x-clip pt-4 sm:pt-6 lg:pt-8 pb-0">
@@ -101,13 +105,18 @@ export default function PublicHero({ profile }: HeroProps) {
                 </Link>
               )}
 
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#F1F1F1] border border-[#DADADA] text-[#121212] text-xs font-medium tracking-wide">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#0B7658] opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#0B7658]"></span>
-                </span>
-                <span>Available for Opportunities</span>
-              </div>
+              {linkedinUrl && (
+                <a
+                  href={linkedinUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-[#DADADA] bg-white text-[#121212] text-xs sm:text-sm font-semibold tracking-wider uppercase hover:border-[#0B7658] hover:text-[#0B7658] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B7658] focus-visible:ring-offset-2"
+                  aria-label="LinkedIn Profile"
+                >
+                  <LinkedInIcon className="w-4 h-4 text-[#0B7658]" />
+                  <span>LinkedIn</span>
+                </a>
+              )}
             </div>
 
           </div>
