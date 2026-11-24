@@ -8,13 +8,13 @@ import { subscribeToProfile } from '@/lib/services/firestore';
 import type { Profile } from '@/types';
 
 const NAV_LINKS = [
-  { name: 'About', href: '#about' },
-  { name: 'Skills', href: '#skills' },
-  { name: 'Projects', href: '#projects' },
-  { name: 'Certifications', href: '#certifications' },
-  { name: 'Education', href: '#education' },
-  { name: 'Profiles', href: '#coding-profiles' },
-  { name: 'Contact', href: '#contact' },
+  { name: 'About', href: '/#about' },
+  { name: 'Skills', href: '/#skills' },
+  { name: 'Projects', href: '/#projects' },
+  { name: 'Certifications', href: '/#certifications' },
+  { name: 'Education', href: '/#education' },
+  { name: 'Profiles', href: '/#coding-profiles' },
+  { name: 'Contact', href: '/#contact' },
 ];
 
 interface HeaderProps {

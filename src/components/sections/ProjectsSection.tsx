@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import type { Project, Profile } from '@/types';
 import ProjectCard from '@/components/ui/ProjectCard';
 import Container from '@/components/ui/Container';
@@ -10,9 +11,9 @@ interface ProjectsSectionProps {
   profile?: Profile | null;
 }
 
-export default function ProjectsSection({ projects, profile }: ProjectsSectionProps) {
+export default function ProjectsSection({ projects }: ProjectsSectionProps) {
   const data = projects && projects.length > 0 ? projects : [];
-  const githubUrl = profile?.githubUrl || 'https://github.com';
+  const displayedProjects = data.slice(0, 3);
 
   if (data.length === 0) {
     return null;
@@ -43,26 +44,22 @@ export default function ProjectsSection({ projects, profile }: ProjectsSectionPr
               </p>
             </div>
 
-            {/* Green text link "View all projects →" to GitHub profile */}
-            {githubUrl && (
-              <div className="pt-6">
-                <a
-                  href={githubUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#0B7658] hover:text-[#096148] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B7658]"
-                >
-                  <span>View all projects</span>
-                  <span className="transform transition-transform group-hover:translate-x-1" aria-hidden="true">→</span>
-                </a>
-              </div>
-            )}
+            {/* Green text link "View all projects →" redirecting to /projects */}
+            <div className="pt-6">
+              <Link
+                href="/projects"
+                className="group inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#0B7658] hover:text-[#096148] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B7658]"
+              >
+                <span>View all projects</span>
+                <span className="transform transition-transform group-hover:translate-x-1" aria-hidden="true">→</span>
+              </Link>
+            </div>
           </div>
 
-          {/* Right column (about 3/4 width on desktop): 3 equal columns with generous gap */}
+          {/* Right column (about 3/4 width on desktop): up to 3 projects */}
           <div className="lg:w-3/4 lg:pl-10">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {data.map((project, idx) => (
+              {displayedProjects.map((project, idx) => (
                 <ProjectCard
                   key={project.id || project.slug || idx}
                   project={project}
@@ -70,6 +67,19 @@ export default function ProjectsSection({ projects, profile }: ProjectsSectionPr
                 />
               ))}
             </div>
+
+            {/* Mobile "View all projects" link under the cards */}
+            {data.length > 3 && (
+              <div className="mt-8 pt-6 border-t border-[#DADADA] flex justify-center lg:hidden">
+                <Link
+                  href="/projects"
+                  className="group inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#0B7658] hover:text-[#096148] transition-colors"
+                >
+                  <span>View all projects ({data.length})</span>
+                  <span className="transform transition-transform group-hover:translate-x-1" aria-hidden="true">→</span>
+                </Link>
+              </div>
+            )}
           </div>
 
         </div>
