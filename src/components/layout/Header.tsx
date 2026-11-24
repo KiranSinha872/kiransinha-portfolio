@@ -59,7 +59,7 @@ export default function PublicHeader({ profile: initialProfile }: HeaderProps = 
           <div className="flex-1 min-w-0">
             {tagline ? (
               <span
-                className="text-[11px] sm:text-xs uppercase tracking-[0.18em] text-[#5B5B5B] truncate block max-w-[240px] sm:max-w-xs md:max-w-sm"
+                className="text-[10px] sm:text-[11px] lg:text-xs uppercase tracking-[0.12em] sm:tracking-[0.18em] text-[#5B5B5B] block leading-tight font-medium"
                 title={tagline}
               >
                 {tagline}
