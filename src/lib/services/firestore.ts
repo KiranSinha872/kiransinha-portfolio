@@ -39,6 +39,7 @@ export {
   addSkill,
   updateSkill,
   deleteSkill,
+  deleteSkillCategory,
   subscribeToSkills,
 } from './skills';
 

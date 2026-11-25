@@ -54,7 +54,8 @@ export type SkillCategory =
   | 'Database'
   | 'Frontend'
   | 'Data Science'
-  | 'Tools';
+  | 'Tools'
+  | (string & {});
 
 export interface Skill {
   id?: string;

@@ -69,10 +69,39 @@ export async function deleteSkill(id: string): Promise<void> {
   }
 }
 
+/**
+ * Permanently deletes an entire skill category and all skills associated with it.
+ */
+export async function deleteSkillCategory(category: string): Promise<{ deletedCount: number }> {
+  const trimmed = category.trim();
+  if (!trimmed) {
+    throw new Error('Category name cannot be empty');
+  }
+
+  const { data, error } = await supabase
+    .from('skills')
+    .delete()
+    .eq('category', trimmed)
+    .select('id');
+
+  if (error) {
+    console.error(`Supabase deleteSkillCategory error for "${trimmed}":`, error);
+    throw error;
+  }
+
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('portfolio:skills-updated'));
+  }
+
+  return { deletedCount: data ? data.length : 0 };
+}
+
 export function subscribeToSkills(
   callback: (skills: Skill[]) => void
 ): () => void {
   let isMounted = true;
+
+  // Initial fetch
   getSkillsList()
     .then((data) => {
       if (isMounted) callback(data);
@@ -80,7 +109,47 @@ export function subscribeToSkills(
     .catch((error) => {
       console.warn('Skills fetch error:', error);
     });
+
+  // Real-time Supabase postgres_changes listener
+  const channel = supabase
+    .channel('realtime:public:skills')
+    .on(
+      'postgres_changes',
+      { event: '*', schema: 'public', table: 'skills' },
+      () => {
+        getSkillsList()
+          .then((data) => {
+            if (isMounted) callback(data);
+          })
+          .catch((error) => {
+            console.warn('Skills realtime refresh error:', error);
+          });
+      }
+    )
+    .subscribe();
+
+  // Local window event listener for instant multi-tab & cross-component sync
+  const handleLocalSync = () => {
+    getSkillsList()
+      .then((data) => {
+        if (isMounted) callback(data);
+      })
+      .catch((error) => {
+        console.warn('Skills local sync refresh error:', error);
+      });
+  };
+
+  if (typeof window !== 'undefined') {
+    window.addEventListener('portfolio:skills-updated', handleLocalSync);
+    window.addEventListener('storage', handleLocalSync);
+  }
+
   return () => {
     isMounted = false;
+    supabase.removeChannel(channel);
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('portfolio:skills-updated', handleLocalSync);
+      window.removeEventListener('storage', handleLocalSync);
+    }
   };
 }

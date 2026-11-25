@@ -1,8 +1,11 @@
-import React from 'react';
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import type { Skill } from '@/types';
 import Container from '@/components/ui/Container';
 import SectionHeading from '@/components/ui/SectionHeading';
 import SkillBadge from '@/components/ui/SkillBadge';
+import { subscribeToSkills } from '@/lib/services/firestore';
 import {
   getCategoryIconType,
   type CategoryIconType,
@@ -20,24 +23,6 @@ import {
 interface SkillsSectionProps {
   skills: Skill[];
 }
-
-const DEFAULT_SKILLS: Skill[] = [
-  { name: 'TypeScript', category: 'Programming', proficiency: 90 },
-  { name: 'JavaScript (ES6+)', category: 'Programming', proficiency: 92 },
-  { name: 'Python', category: 'Programming', proficiency: 85 },
-  { name: 'C++', category: 'Programming', proficiency: 80 },
-  { name: 'Next.js', category: 'Frontend', proficiency: 88 },
-  { name: 'React', category: 'Frontend', proficiency: 90 },
-  { name: 'Tailwind CSS', category: 'Frontend', proficiency: 94 },
-  { name: 'Node.js', category: 'Backend', proficiency: 86 },
-  { name: 'Express.js', category: 'Backend', proficiency: 84 },
-  { name: 'REST & GraphQL APIs', category: 'Backend', proficiency: 82 },
-  { name: 'PostgreSQL', category: 'Database', proficiency: 80 },
-  { name: 'PostgreSQL & Supabase', category: 'Database', proficiency: 90 },
-  { name: 'Git & GitHub', category: 'Tools', proficiency: 88 },
-  { name: 'Docker', category: 'Tools' },
-  { name: 'VS Code & Postman', category: 'Tools' },
-];
 
 function CategoryIcon({ type }: { type: CategoryIconType }) {
   const iconProps = { className: 'w-4 h-4', 'aria-hidden': true as const };
@@ -60,8 +45,24 @@ function CategoryIcon({ type }: { type: CategoryIconType }) {
   }
 }
 
-export default function SkillsSection({ skills }: SkillsSectionProps) {
-  const data = skills && skills.length > 0 ? skills : DEFAULT_SKILLS;
+export default function SkillsSection({ skills: initialSkills }: SkillsSectionProps) {
+  const [skills, setSkills] = useState<Skill[]>(initialSkills || []);
+
+  useEffect(() => {
+    if (initialSkills && initialSkills.length > 0) {
+      setSkills(initialSkills);
+    }
+
+    const unsub = subscribeToSkills((latest) => {
+      if (Array.isArray(latest)) {
+        setSkills(latest);
+      }
+    });
+
+    return () => unsub();
+  }, [initialSkills]);
+
+  const data = skills;
 
   // Dynamically group skills by category while preserving first-seen order
   const categoryOrder: string[] = [];

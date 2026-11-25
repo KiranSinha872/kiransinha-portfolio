@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import type { Skill, SkillCategory } from '@/types';
 import { X, Check, Loader2 } from 'lucide-react';
 
@@ -18,6 +18,7 @@ interface SkillFormModalProps {
   editingId: string | null;
   form: Omit<Skill, 'id'>;
   submitting: boolean;
+  categories?: string[];
   onClose: () => void;
   onChange: (form: Omit<Skill, 'id'>) => void;
   onSubmit: (e: React.FormEvent) => void;
@@ -28,10 +29,27 @@ export default function SkillFormModal({
   editingId,
   form,
   submitting,
+  categories = CATEGORIES,
   onClose,
   onChange,
   onSubmit,
 }: SkillFormModalProps) {
+  const [isCustom, setIsCustom] = useState(false);
+
+  // Available options: unique categories provided plus current form category if any
+  const categoryList = Array.from(
+    new Set([...categories, form.category].filter(Boolean))
+  );
+
+  useEffect(() => {
+    // If opening with a category not in the pre-populated list, toggle custom mode
+    if (form.category && !categories.includes(form.category as SkillCategory)) {
+      setIsCustom(true);
+    } else {
+      setIsCustom(false);
+    }
+  }, [isOpen, form.category, categories]);
+
   if (!isOpen) return null;
 
   return (
@@ -66,22 +84,66 @@ export default function SkillFormModal({
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
-              Category
-            </label>
-            <select
-              value={form.category}
-              onChange={(e) =>
-                onChange({ ...form, category: e.target.value as SkillCategory })
-              }
-              className="w-full px-3 py-1.5 border border-gray-300 rounded text-xs bg-white text-gray-900 focus:outline-none focus:border-gray-500"
-            >
-              {CATEGORIES.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
+            <div className="flex items-center justify-between mb-1">
+              <label className="block text-xs font-medium text-gray-700">
+                Category *
+              </label>
+              {!isCustom ? (
+                <button
+                  type="button"
+                  onClick={() => setIsCustom(true)}
+                  className="text-[11px] text-[#0B7658] hover:underline"
+                >
+                  + New Category
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsCustom(false);
+                    if (categoryList.length > 0) {
+                      onChange({ ...form, category: categoryList[0] as SkillCategory });
+                    }
+                  }}
+                  className="text-[11px] text-gray-500 hover:underline"
+                >
+                  Choose Existing
+                </button>
+              )}
+            </div>
+
+            {!isCustom ? (
+              <select
+                value={form.category}
+                onChange={(e) => {
+                  if (e.target.value === '__NEW__') {
+                    setIsCustom(true);
+                  } else {
+                    onChange({ ...form, category: e.target.value as SkillCategory });
+                  }
+                }}
+                className="w-full px-3 py-1.5 border border-gray-300 rounded text-xs bg-white text-gray-900 focus:outline-none focus:border-gray-500"
+              >
+                {categoryList.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+                <option value="__NEW__">+ Custom Category...</option>
+              </select>
+            ) : (
+              <input
+                type="text"
+                required
+                autoFocus
+                value={form.category}
+                onChange={(e) =>
+                  onChange({ ...form, category: e.target.value as SkillCategory })
+                }
+                placeholder="e.g. Mobile, Cloud, Security"
+                className="w-full px-3 py-1.5 border border-gray-300 rounded text-xs bg-white text-gray-900 focus:outline-none focus:border-gray-500"
+              />
+            )}
           </div>
 
           <div>
