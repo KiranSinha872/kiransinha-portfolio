@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import type { Skill, SkillCategory } from '@/types';
 import { X, Check, Loader2 } from 'lucide-react';
 
@@ -34,21 +34,18 @@ export default function SkillFormModal({
   onChange,
   onSubmit,
 }: SkillFormModalProps) {
-  const [isCustom, setIsCustom] = useState(false);
+  const isFormCategoryCustom = Boolean(
+    form.category && !categories.includes(form.category as SkillCategory)
+  );
+  const [customModeOverride, setCustomModeOverride] = useState<boolean | null>(null);
+
+  // If user explicitly toggled mode, use override; otherwise derive from form.category
+  const isCustom = customModeOverride !== null ? customModeOverride : isFormCategoryCustom;
 
   // Available options: unique categories provided plus current form category if any
   const categoryList = Array.from(
     new Set([...categories, form.category].filter(Boolean))
   );
-
-  useEffect(() => {
-    // If opening with a category not in the pre-populated list, toggle custom mode
-    if (form.category && !categories.includes(form.category as SkillCategory)) {
-      setIsCustom(true);
-    } else {
-      setIsCustom(false);
-    }
-  }, [isOpen, form.category, categories]);
 
   if (!isOpen) return null;
 
@@ -91,7 +88,7 @@ export default function SkillFormModal({
               {!isCustom ? (
                 <button
                   type="button"
-                  onClick={() => setIsCustom(true)}
+                  onClick={() => setCustomModeOverride(true)}
                   className="text-[11px] text-[#0B7658] hover:underline"
                 >
                   + New Category
@@ -100,7 +97,7 @@ export default function SkillFormModal({
                 <button
                   type="button"
                   onClick={() => {
-                    setIsCustom(false);
+                    setCustomModeOverride(false);
                     if (categoryList.length > 0) {
                       onChange({ ...form, category: categoryList[0] as SkillCategory });
                     }
@@ -117,7 +114,7 @@ export default function SkillFormModal({
                 value={form.category}
                 onChange={(e) => {
                   if (e.target.value === '__NEW__') {
-                    setIsCustom(true);
+                    setCustomModeOverride(true);
                   } else {
                     onChange({ ...form, category: e.target.value as SkillCategory });
                   }

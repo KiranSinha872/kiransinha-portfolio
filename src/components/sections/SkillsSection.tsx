@@ -49,10 +49,6 @@ export default function SkillsSection({ skills: initialSkills }: SkillsSectionPr
   const [skills, setSkills] = useState<Skill[]>(initialSkills || []);
 
   useEffect(() => {
-    if (initialSkills && initialSkills.length > 0) {
-      setSkills(initialSkills);
-    }
-
     const unsub = subscribeToSkills((latest) => {
       if (Array.isArray(latest)) {
         setSkills(latest);
@@ -60,7 +56,7 @@ export default function SkillsSection({ skills: initialSkills }: SkillsSectionPr
     });
 
     return () => unsub();
-  }, [initialSkills]);
+  }, []);
 
   const data = skills;
 

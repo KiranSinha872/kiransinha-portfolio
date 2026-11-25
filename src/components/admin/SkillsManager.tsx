@@ -29,8 +29,24 @@ export default function SkillsManager() {
   const [submitting, setSubmitting] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [deletingCategory, setDeletingCategory] = useState<string | null>(null);
-  const [deletedCategories, setDeletedCategories] = useState<string[]>([]);
-  const [customCategories, setCustomCategories] = useState<string[]>([]);
+  const [deletedCategories, setDeletedCategories] = useState<string[]>(() => {
+    if (typeof window === 'undefined') return [];
+    try {
+      const storedDeleted = localStorage.getItem('admin_deleted_skill_categories');
+      return storedDeleted ? JSON.parse(storedDeleted) : [];
+    } catch {
+      return [];
+    }
+  });
+  const [customCategories, setCustomCategories] = useState<string[]>(() => {
+    if (typeof window === 'undefined') return [];
+    try {
+      const storedCustom = localStorage.getItem('admin_custom_skill_categories');
+      return storedCustom ? JSON.parse(storedCustom) : [];
+    } catch {
+      return [];
+    }
+  });
 
   const [form, setForm] = useState<Omit<Skill, 'id'>>({
     name: '',
@@ -39,22 +55,6 @@ export default function SkillsManager() {
     featured: false,
     order: 0,
   });
-
-  // Load persisted custom and deleted categories from localStorage on mount
-  useEffect(() => {
-    try {
-      const storedDeleted = localStorage.getItem('admin_deleted_skill_categories');
-      if (storedDeleted) {
-        setDeletedCategories(JSON.parse(storedDeleted));
-      }
-      const storedCustom = localStorage.getItem('admin_custom_skill_categories');
-      if (storedCustom) {
-        setCustomCategories(JSON.parse(storedCustom));
-      }
-    } catch (e) {
-      console.warn('Failed to parse categories from localStorage:', e);
-    }
-  }, []);
 
   const loadData = async () => {
     try {
