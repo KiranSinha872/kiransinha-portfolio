@@ -18,6 +18,7 @@ interface HeroProps {
 
 export default function PublicHero({ profile }: HeroProps) {
   const [resumeModalOpen, setResumeModalOpen] = useState(false);
+  const [portraitRevealed, setPortraitRevealed] = useState(false);
   const shouldReduceMotion = useReducedMotion();
 
   // Short bio preview
@@ -141,20 +142,36 @@ export default function PublicHero({ profile }: HeroProps) {
 
           </div>
 
-          {/* Right Column: Cut-Out Portrait with Backdrop Atmosphere */}
+          {/* Right Column: Cut-Out Portrait with Hover Color Reveal & Atmospheric Circle */}
           <div className="relative w-full lg:w-1/2 h-[420px] sm:h-[500px] lg:h-[620px] flex items-end justify-center lg:justify-end">
-            <div className="relative h-[94%] w-auto flex items-end mr-0 lg:mr-4">
-              
-              {/* Reference Atmospheric Backdrop Circle */}
+            <div
+              tabIndex={0}
+              role="region"
+              aria-label="Portrait of Kiran Sinha. Hover, tap, or focus to reveal full color."
+              onMouseEnter={() => setPortraitRevealed(true)}
+              onMouseLeave={() => setPortraitRevealed(false)}
+              onFocus={() => setPortraitRevealed(true)}
+              onBlur={() => setPortraitRevealed(false)}
+              onClick={() => setPortraitRevealed((prev) => !prev)}
+              className="group relative h-[94%] w-auto flex items-end mr-0 lg:mr-4 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B7658] focus-visible:ring-offset-4 rounded-3xl"
+            >
+              {/* Reference Atmospheric Backdrop Circle: Hidden/neutral at rest, fades in on hover/focus */}
               <div
-                className="absolute z-0 h-[78%] aspect-square rounded-full bg-gradient-to-tr from-[#2F9E73] to-[#7a8670] opacity-80 dark:opacity-60 -top-[2%] left-[55%] -translate-x-1/2 pointer-events-none blur-[1px]"
+                className={`absolute z-0 h-[78%] aspect-square rounded-full bg-gradient-to-tr from-[#2F9E73] to-[#7a8670] -top-[2%] left-[55%] -translate-x-1/2 pointer-events-none blur-[1px] transition-opacity duration-550 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none ${
+                  portraitRevealed
+                    ? 'opacity-80 dark:opacity-60'
+                    : 'opacity-0 group-hover:opacity-80 dark:group-hover:opacity-60 group-focus-visible:opacity-80'
+                }`}
                 aria-hidden="true"
               />
 
               {/* Floating "My developer card" Badge on the portrait (Placed at chest area, keeping face clear) */}
               <button
                 type="button"
-                onClick={() => scrollToSection('developer-card-placeholder')}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  scrollToSection('developer-card-placeholder');
+                }}
                 className="absolute top-[52%] sm:top-[48%] -left-3 sm:-left-6 z-20 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--line)] bg-[var(--background)]/95 backdrop-blur-md shadow-xl text-xs font-semibold text-[var(--foreground)] hover:border-[#0B7658] hover:scale-105 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B7658]"
                 title="Explore Developer Card"
               >
@@ -162,7 +179,7 @@ export default function PublicHero({ profile }: HeroProps) {
                 <span>My developer card</span>
               </button>
 
-              {/* High-Resolution Cut-Out Portrait */}
+              {/* High-Resolution Cut-Out Portrait: Greyscale by default, transitions to full color on hover/focus/tap */}
               <Image
                 src="/images/my-photo.png"
                 alt="Kiran Sinha"
@@ -170,7 +187,11 @@ export default function PublicHero({ profile }: HeroProps) {
                 height={1024}
                 priority
                 unoptimized
-                className="relative z-10 h-full w-auto block select-none pointer-events-none drop-shadow-xl"
+                className={`relative z-10 h-full w-auto block select-none pointer-events-none drop-shadow-xl transition-[filter] duration-550 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none ${
+                  portraitRevealed
+                    ? 'grayscale-0'
+                    : 'grayscale group-hover:grayscale-0 group-focus-visible:grayscale-0'
+                }`}
               />
             </div>
           </div>

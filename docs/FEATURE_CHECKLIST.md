@@ -103,13 +103,20 @@ Portfolio_kiran/
 - [ ] **Mobile Navigation:** Responsive drawer/overlay menu toggle accessible on touch screens.
 - [ ] **Discreet Admin Access:** Retain subtle footer link to `/admin/login` for portfolio management.
 
-### B. Hero Section
-- [ ] **Name & Title:** Dynamic rendering of `profile.name` ("Kiran Sinha") and title/headline.
-- [ ] **Bio Preview:** Dynamic rendering of `profile.bio` / `profile.about`.
-- [ ] **Portrait Asset:** High-resolution portrait display (`/images/hero-kiran.png`).
-- [ ] **Resume Viewing:** "View Resume" button that opens `profile.resumeUrl` in an interactive modal with direct download support.
-- [ ] **Get In Touch CTA:** Primary button scrolling directly to the contact experience.
-- [ ] **LinkedIn Quick Link:** Direct external link to `profile.linkedinUrl` with `rel="noopener noreferrer"`.
+### B. Hero Section (Implemented & Verified)
+- [x] **Name & Title:** Dynamic rendering of `profile.name` ("Kiran Sinha") and title/headline.
+- [x] **Bio Preview:** Dynamic rendering of `profile.bio` / `profile.about`.
+- [x] **Portrait Asset & Colour Reveal:**
+  - High-resolution portrait display (`/reference/my-photo.png` / `/images/hero-kiran.png`).
+  - Greyscale by default, smooth 0.55s cubic-bezier reveal to full colour on hover/focus.
+  - Atmospheric green backdrop halo is hidden/neutral at rest and fades in on reveal.
+  - Touch friendly (tap toggles colour state) and keyboard accessible (`tabIndex={0}`, focusable).
+  - Respects `prefers-reduced-motion: reduce`.
+- [x] **Resume Viewing:** "View Resume" button that opens `profile.resumeUrl` in an interactive modal with direct download support.
+- [x] **Get In Touch CTA:** Primary button scrolling directly to the contact experience.
+- [x] **LinkedIn Quick Link:** Direct external link to `profile.linkedinUrl` with `rel="noopener noreferrer"`.
+- [x] **Spiral-Notebook Role Flip Card:** Interactive flip card cycling roles with dark ink on textured paper.
+- [x] **Pull-Cord Theme Lamp:** Interactive Verlet physics pull cord switching dark/light themes.
 
 ### C. About Section
 - [ ] **Detailed Bio:** Comprehensive narrative from `profile.bio` / `profile.about`.
@@ -124,13 +131,15 @@ Portfolio_kiran/
 - [ ] **Skill Badges / Proficiency:** Skill name, proficiency percentage (e.g. 90%), and icon representation.
 - [ ] **Real-Time Subscription:** Maintain `subscribeToSkills` so admin deletions and creations propagate immediately without page reloads.
 
-### E. Projects & Showcase (Phase a Implemented)
-- [x] **Interactive Project Doors Wall:**
-  - Dynamic doors generated from real Supabase projects data (up to 6 doors, prioritizes `featured` and `order`).
-  - Architectural styling with custom palettes per door (`#1c2638`, `#341f2a`, `#1b2b20`, `#382315`, `#221c33`, `#282417`).
-  - Spring-loaded hover interaction cracking the door open (`rotateY(-24deg)`), revealing warm interior light spill and sill illumination.
-  - Floating circular cursor badge (`#doorCursor`) following mouse with smooth transition.
-  - Click swings door wide (`rotateY(-75deg)`) and launches Project Overview Panel.
+### E. Projects & Showcase (Phase a Implemented & Verified)
+- [x] **Interactive Roman Arch Project Doors Wall:**
+  - Architecture matching reference site: Roman arch geometry (`50cqi 50cqi 0 0`), casing molding with multi-tier inset drop shadows.
+  - Authentic door leaves with vertical micro-fluting, brass nameplates with debossed lettering and screw rivets, and antique brass lever handles with keyhole escutcheons.
+  - Dynamic doors generated from real Supabase projects data (3 to 6 doors, prioritizes `featured` and `order`).
+  - Spring-loaded hover interaction cracking the door open (`rotateY(10deg)`), revealing illuminated project artwork inside `.room`, glowing `.sill`, and warm light floor spill (`.pool`).
+  - Floating circular cursor badge (`#doorCursor`) following mouse with smooth transitions.
+  - Click swings door wide (`rotateY(70deg)`) and launches Project Overview Panel.
+  - Full container query responsiveness (`cqi`), keyboard navigation, and `prefers-reduced-motion` fallbacks.
 - [x] **Project Overview Panel (Modal Dialog):**
   - Project index (`PROJECT 01 / 03`), title, tagline, what it does, and problem it solves.
   - Individualized tech stack tags (`project.tags`).

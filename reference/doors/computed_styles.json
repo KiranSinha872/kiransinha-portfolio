@@ -1,0 +1,44 @@
+{
+  "doorway": {
+    "aspectRatio": "1 / 2.25",
+    "borderRadius": "86.5469px 86.5469px 0px 0px",
+    "width": 173.09375,
+    "height": 389.453125
+  },
+  "casing": {
+    "background": "linear-gradient(90deg, rgba(0, 0, 0, 0.07), rgba(255, 255, 255, 0.18) 5.19281px, rgba(0, 0, 0, 0) 10.3856px, rgba(0, 0, 0, 0) calc(100% - 10.3856px), rgba(0, 0, 0, 0.05) calc(100% - 5.19281px), rgba(0, 0, 0, 0.12)) repeat scroll 0% 0% / auto padding-box border-box, linear-gradient(rgba(255, 255, 255, 0.35), rgba(0, 0, 0, 0) 30%) repeat scroll 0% 0% / auto padding-box border-box, rgb(242, 239, 236) none repeat scroll 0% 0% / auto padding-box border-box",
+    "boxShadow": "rgba(255, 255, 255, 0.28) 0px 0px 0px 1.90403px inset, rgba(0, 0, 0, 0.07) 0px 0px 0px 2.59641px inset, rgba(255, 255, 255, 0.12) 0px 0px 0px 6.23138px inset, rgba(0, 0, 0, 0.08) 0px 0px 0px 7.09684px inset, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px, rgba(26, 24, 24, 0.2) 2.59641px 4.32734px 7.78922px 0px, rgba(26, 24, 24, 0.08) -0.865469px 1.73094px 5.19281px 0px",
+    "borderRadius": "86.5469px 86.5469px 0px 0px"
+  },
+  "door": {
+    "background": "linear-gradient(100deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 30%, rgba(0, 0, 0, 0.18) 100%) repeat scroll 0% 0% / auto padding-box border-box, rgb(34, 48, 74) none repeat scroll 0% 0% / auto padding-box border-box",
+    "borderRadius": "73.5648px 73.5648px 0px 0px",
+    "boxShadow": "rgba(0, 0, 0, 0.28) 0px 0px 0px 0.519281px inset, rgba(255, 255, 255, 0.05) 1.03856px 0px 0px 0px inset",
+    "transformOrigin": "0px 188.242px"
+  },
+  "plate": {
+    "background": "rgba(0, 0, 0, 0) linear-gradient(160deg, rgb(239, 223, 178) 0%, rgb(201, 168, 102) 28%, rgb(227, 204, 146) 48%, rgb(169, 135, 71) 72%, rgb(210, 182, 122) 100%) repeat scroll 0% 0% / auto padding-box border-box",
+    "color": "rgb(43, 33, 18)",
+    "fontSize": "9.34706px",
+    "fontFamily": "Onest, ui-sans-serif, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+    "boxShadow": "rgba(0, 0, 0, 0.4) 0px 0.865469px 1.73094px 0px, rgba(255, 250, 228, 0.7) 0px 0.519281px 0px 0px inset, rgba(88, 62, 22, 0.45) 0px -0.519281px 0px 0px inset",
+    "textTransform": "uppercase",
+    "letterSpacing": "0.841236px"
+  },
+  "handle": {
+    "background": "rgba(0, 0, 0, 0) radial-gradient(circle at 36% 30%, rgb(255, 246, 220) 0px, rgb(230, 203, 138) 14%, rgb(184, 147, 76) 40%, rgb(128, 96, 42) 70%, rgb(77, 56, 22) 100%) repeat scroll 0% 0% / auto padding-box border-box",
+    "width": "16.2656px",
+    "height": "16.2656px",
+    "borderRadius": "50%"
+  },
+  "sill": {
+    "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+    "filter": "blur(1.21166px)"
+  },
+  "paint": {
+    "fontFamily": "Onest, ui-sans-serif, system-ui, -apple-system, \"Segoe UI\", sans-serif",
+    "fontSize": "37.2667px",
+    "fontWeight": "700",
+    "color": "rgb(26, 24, 24)"
+  }
+}
