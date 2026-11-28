@@ -125,11 +125,18 @@ Portfolio_kiran/
   - Focus Area badge (e.g., "Artificial Intelligence & Machine Learning")
   - Mindset / Status badge (e.g., "Available for Opportunities")
 
-### D. Technical Skills & Doors
-- [ ] **Dynamic Data Fetching:** Render skills dynamically from database (`public.skills`).
-- [ ] **Category Grouping:** Full preservation of dynamic categories (Programming, Backend, Database, Frontend, Data Science, Tools, etc.).
-- [ ] **Skill Badges / Proficiency:** Skill name, proficiency percentage (e.g. 90%), and icon representation.
-- [ ] **Real-Time Subscription:** Maintain `subscribeToSkills` so admin deletions and creations propagate immediately without page reloads.
+### D. Technical Skills Showcase (Phase b Implemented & Verified)
+- [x] **Dynamic Data Fetching:** Render skills dynamically from Supabase database (`public.skills`).
+- [x] **Category Grouping & Dynamic Tabs:**
+  - Dynamic tabs list generated from real Supabase skill categories (`Programming`, `Backend`, `Database`, `Frontend`, `Data Science`, `Tools`, etc. — handles any number of categories gracefully).
+  - "All Disciplines" master view plus single-discipline focus views.
+  - Category count pills showing real item counts.
+- [x] **Animated Reveal & Skill Cards:**
+  - Staggered entry animation on category tab selection (`AnimatePresence` + `motion.div`).
+  - Real SVG brand icons with brand hex colors (simple-icons) and accessible fallback glyphs.
+  - Real proficiency percentage indicators only when present in database (no invented metrics or numbers).
+  - Respects `prefers-reduced-motion: reduce`.
+- [x] **Real-Time Subscription:** Maintains `subscribeToSkills` so admin deletions, creations, and edits propagate live without page reloads.
 
 ### E. Projects & Showcase (Phase a Implemented & Verified)
 - [x] **Interactive Roman Arch Project Doors Wall:**
