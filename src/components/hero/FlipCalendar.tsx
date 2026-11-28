@@ -1,78 +1,89 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 
-const ROLES = [
-  'Full-Stack Developer',
-  'AI/ML Student',
-  'React & Next.js Builder',
-  'Problem Solver',
+// Single source of truth: Exactly four roles in the specified order
+export const ROLES = [
   'Aspiring Software Engineer',
-];
+  'Full Stack Developer',
+  'Problem Solver',
+  'AI/ML Student',
+] as const;
 
 export default function FlipCalendar() {
   const [index, setIndex] = useState(0);
   const [isFlipping, setIsFlipping] = useState(false);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const total = ROLES.length;
+  // Single active timers for auto-cycling and transition cleanup
+  const autoTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const animTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const advanceRef = useRef<() => void>(() => {});
+
+  const total = ROLES.length; // Exactly 4
   const currentRole = ROLES[index];
   const nextRole = ROLES[(index + 1) % total];
 
   const currentCount = `${String(index + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
   const nextCount = `${String(((index + 1) % total) + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
 
-  const triggerFlip = () => {
+  // Core advancement logic with timer synchronization
+  const advance = useCallback(() => {
     if (isFlipping) return;
+
+    // Clear any pending timers so auto and manual triggers never conflict
+    if (autoTimerRef.current) clearTimeout(autoTimerRef.current);
+    if (animTimerRef.current) clearTimeout(animTimerRef.current);
+
     setIsFlipping(true);
 
-    setTimeout(() => {
+    animTimerRef.current = setTimeout(() => {
       setIndex((prev) => (prev + 1) % total);
       setIsFlipping(false);
-    }, 600);
-  };
+
+      // Reschedule next automatic cycle from this exact point
+      autoTimerRef.current = setTimeout(() => {
+        advanceRef.current();
+      }, 2600);
+    }, 500);
+  }, [isFlipping, total]);
 
   useEffect(() => {
-    const cycle = () => {
-      if (document.hidden) {
-        timerRef.current = setTimeout(cycle, 1000);
-        return;
-      }
-      setIsFlipping(true);
-      setTimeout(() => {
-        setIndex((prev) => (prev + 1) % total);
-        setIsFlipping(false);
-      }, 600);
-      timerRef.current = setTimeout(cycle, 2600);
-    };
+    advanceRef.current = advance;
+  }, [advance]);
 
-    timerRef.current = setTimeout(cycle, 2200);
+  // Initial timer setup with strict-mode cleanup
+  useEffect(() => {
+    // Start initial timer
+    autoTimerRef.current = setTimeout(() => {
+      advanceRef.current();
+    }, 2400);
 
+    // Guaranteed unmount cleanup preventing React Strict Mode duplicates
     return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
+      if (autoTimerRef.current) clearTimeout(autoTimerRef.current);
+      if (animTimerRef.current) clearTimeout(animTimerRef.current);
     };
-  }, [total]);
+  }, []);
 
   return (
     <div
-      onClick={triggerFlip}
+      onClick={advance}
       className="inline-block align-middle cursor-pointer select-none group perspective-[800px]"
-      title="Click to flip role"
+      title="Click to advance to next role"
       role="button"
       tabIndex={0}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          triggerFlip();
+          advance();
         }
       }}
-      aria-label={`Role: ${currentRole}. Press enter to cycle.`}
+      aria-label={`Role: ${currentRole} (${currentCount}). Press enter or click to advance.`}
     >
-      {/* Paper Card - Always tactile ivory paper with crisp dark ink in both themes */}
+      {/* Paper Card - Tactile ivory paper with crisp dark ink */}
       <div className="relative inline-flex flex-col rounded-2xl border border-[#D5CFC7] bg-gradient-to-b from-[#FBF9F5] via-[#F4EFE6] to-[#EAE3D8] shadow-[0_6px_18px_rgba(0,0,0,0.12),0_1px_3px_rgba(0,0,0,0.08)] px-5 py-3 sm:px-6 sm:py-3.5 transition-transform duration-300 group-hover:-translate-y-0.5">
-        
         {/* Top Wire Spiral Rings */}
-        <div className="absolute -top-2.5 inset-x-0 flex items-center justify-around px-4 pointer-events-none">
+        <div className="absolute -top-2.5 inset-x-0 flex items-center justify-around px-4 pointer-events-none" aria-hidden="true">
           {Array.from({ length: 6 }).map((_, i) => (
             <div
               key={i}
@@ -87,41 +98,35 @@ export default function FlipCalendar() {
           <div className="relative h-8 sm:h-9 overflow-hidden min-w-[240px] sm:min-w-[320px]">
             <span
               className={`block text-lg sm:text-2xl font-bold text-[#161616] tracking-tight whitespace-nowrap transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                isFlipping
-                  ? '-translate-y-full opacity-0'
-                  : 'translate-y-0 opacity-100'
+                isFlipping ? '-translate-y-full opacity-0' : 'translate-y-0 opacity-100'
               }`}
             >
               {currentRole}
             </span>
             <span
               className={`absolute inset-0 block text-lg sm:text-2xl font-bold text-[#161616] tracking-tight whitespace-nowrap transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                isFlipping
-                  ? 'translate-y-0 opacity-100'
-                  : 'translate-y-full opacity-0'
+                isFlipping ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
               }`}
+              aria-hidden="true"
             >
               {nextRole}
             </span>
           </div>
 
-          {/* Odometer Counter (e.g. 01 / 05) in dark ink */}
+          {/* Odometer Counter (01 / 04 to 04 / 04) */}
           <div className="relative h-5 overflow-hidden font-mono text-xs sm:text-sm font-semibold text-[#5C5650] select-none shrink-0 border-l border-[#D5CFC7] pl-3.5">
             <span
               className={`block transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                isFlipping
-                  ? '-translate-y-full opacity-0'
-                  : 'translate-y-0 opacity-100'
+                isFlipping ? '-translate-y-full opacity-0' : 'translate-y-0 opacity-100'
               }`}
             >
               {currentCount}
             </span>
             <span
               className={`absolute inset-0 pl-3.5 block transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                isFlipping
-                  ? 'translate-y-0 opacity-100'
-                  : 'translate-y-full opacity-0'
+                isFlipping ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
               }`}
+              aria-hidden="true"
             >
               {nextCount}
             </span>
@@ -129,7 +134,7 @@ export default function FlipCalendar() {
         </div>
 
         {/* Paper fold bottom edge shadow */}
-        <div className="absolute inset-x-0 bottom-0 h-[1.5px] bg-[#D0C8BF] rounded-b-2xl pointer-events-none" />
+        <div className="absolute inset-x-0 bottom-0 h-[1.5px] bg-[#D0C8BF] rounded-b-2xl pointer-events-none" aria-hidden="true" />
       </div>
     </div>
   );

@@ -2,15 +2,15 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { motion, useReducedMotion } from 'framer-motion';
-import { FileText, ArrowRight, Sparkles } from 'lucide-react';
+import { FileText, ArrowRight } from 'lucide-react';
 import { LinkedInIcon } from '@/components/ui/PlatformIcons';
 import PublicResumeModal from '@/components/ui/PublicResumeModal';
 import DeveloperCardModal from '@/components/ui/DeveloperCardModal';
 import PullCord from '@/components/hero/PullCord';
 import IntroLoader from '@/components/hero/IntroLoader';
 import FlipCalendar from '@/components/hero/FlipCalendar';
+import InteractivePortrait from '@/components/hero/InteractivePortrait';
 import type { Profile } from '@/types';
 
 interface HeroProps {
@@ -20,7 +20,6 @@ interface HeroProps {
 export default function PublicHero({ profile }: HeroProps) {
   const [resumeModalOpen, setResumeModalOpen] = useState(false);
   const [devCardModalOpen, setDevCardModalOpen] = useState(false);
-  const [portraitRevealed, setPortraitRevealed] = useState(false);
   const shouldReduceMotion = useReducedMotion();
 
   // Short bio preview
@@ -144,58 +143,9 @@ export default function PublicHero({ profile }: HeroProps) {
 
           </div>
 
-          {/* Right Column: Cut-Out Portrait with Hover Color Reveal & Atmospheric Circle */}
-          <div className="relative w-full lg:w-1/2 h-[420px] sm:h-[500px] lg:h-[620px] flex items-end justify-center lg:justify-end">
-            <div
-              tabIndex={0}
-              role="region"
-              aria-label="Portrait of Kiran Sinha. Hover, tap, or focus to reveal full color."
-              onMouseEnter={() => setPortraitRevealed(true)}
-              onMouseLeave={() => setPortraitRevealed(false)}
-              onFocus={() => setPortraitRevealed(true)}
-              onBlur={() => setPortraitRevealed(false)}
-              onClick={() => setPortraitRevealed((prev) => !prev)}
-              className="group relative h-[94%] w-auto flex items-end mr-0 lg:mr-4 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B7658] focus-visible:ring-offset-4 rounded-3xl"
-            >
-              {/* Reference Atmospheric Backdrop Circle: Hidden/neutral at rest, fades in on hover/focus */}
-              <div
-                className={`absolute z-0 h-[78%] aspect-square rounded-full bg-gradient-to-tr from-[#2F9E73] to-[#7a8670] -top-[2%] left-[55%] -translate-x-1/2 pointer-events-none blur-[1px] transition-opacity duration-550 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none ${
-                  portraitRevealed
-                    ? 'opacity-80 dark:opacity-60'
-                    : 'opacity-0 group-hover:opacity-80 dark:group-hover:opacity-60 group-focus-visible:opacity-80'
-                }`}
-                aria-hidden="true"
-              />
-
-              {/* Floating "My developer card" Badge on the portrait (Placed at chest area, keeping face clear) */}
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setDevCardModalOpen(true);
-                }}
-                className="absolute top-[52%] sm:top-[48%] -left-3 sm:-left-6 z-20 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--line)] bg-[var(--background)]/95 backdrop-blur-md shadow-xl text-xs font-semibold text-[var(--foreground)] hover:border-[#0B7658] hover:scale-105 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B7658]"
-                title="Explore Developer Ability Card"
-              >
-                <Sparkles className="w-3.5 h-3.5 text-[#0B7658]" />
-                <span>My developer card</span>
-              </button>
-
-              {/* High-Resolution Cut-Out Portrait: Greyscale by default, transitions to full color on hover/focus/tap */}
-              <Image
-                src="/images/my-photo.png"
-                alt="Kiran Sinha"
-                width={515}
-                height={1024}
-                priority
-                unoptimized
-                className={`relative z-10 h-full w-auto block select-none pointer-events-none drop-shadow-xl transition-[filter] duration-550 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none ${
-                  portraitRevealed
-                    ? 'grayscale-0'
-                    : 'grayscale group-hover:grayscale-0 group-focus-visible:grayscale-0'
-                }`}
-              />
-            </div>
+          {/* Right Column: Interactive Cut-Out Portrait with Per-Part Highlighting (Green circle removed) */}
+          <div className="relative w-full lg:w-1/2 flex items-end justify-center lg:justify-end pb-0">
+            <InteractivePortrait onOpenDevCard={() => setDevCardModalOpen(true)} />
           </div>
 
         </div>

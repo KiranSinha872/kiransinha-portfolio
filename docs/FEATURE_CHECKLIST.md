@@ -106,16 +106,30 @@ Portfolio_kiran/
 ### B. Hero Section (Implemented & Verified)
 - [x] **Name & Title:** Dynamic rendering of `profile.name` ("Kiran Sinha") and title/headline.
 - [x] **Bio Preview:** Dynamic rendering of `profile.bio` / `profile.about`.
-- [x] **Portrait Asset & Colour Reveal:**
-  - High-resolution portrait display (`/reference/my-photo.png` / `/images/hero-kiran.png`).
-  - Greyscale by default, smooth 0.55s cubic-bezier reveal to full colour on hover/focus.
-  - Atmospheric green backdrop halo is hidden/neutral at rest and fades in on reveal.
-  - Touch friendly (tap toggles colour state) and keyboard accessible (`tabIndex={0}`, focusable).
+- [x] **Per-Part Portrait Highlighting & Cut-Out Photo:**
+  - High-resolution cut-out portrait without any green circle or backdrop halo (clean cut-out photo only).
+  - Greyscale at rest.
+  - Per-part semantic segmentation generated offline with Self-Correction Human Parsing (SCHP LIP model):
+    - `hair`: Hair cut-out
+    - `face_skin`: Face, neck, and skin
+    - `shirt`: White dress shirt
+    - `tie`: Necktie
+    - `jacket`: Suit jacket / blazer
+    - `trousers`: Pants / trousers
+  - Hovering a part fades only that part to real colour (0.4s ease). Moving cursor moves colour with cursor.
+  - Clicking/tapping a part locks it in colour. Multiple parts can be locked simultaneously. Clicking empty space does nothing.
+  - Keyboard accessible (`role="toolbar"` with focusable part badges, arrow navigation, and Enter to toggle).
+  - Clean feathered edges without halos or color bleed outside silhouette.
   - Respects `prefers-reduced-motion: reduce`.
+  - Floating "My developer card" button remains fully accessible.
 - [x] **Resume Viewing:** "View Resume" button that opens `profile.resumeUrl` in an interactive modal with direct download support.
 - [x] **Get In Touch CTA:** Primary button scrolling directly to the contact experience.
 - [x] **LinkedIn Quick Link:** Direct external link to `profile.linkedinUrl` with `rel="noopener noreferrer"`.
-- [x] **Spiral-Notebook Role Flip Card:** Interactive flip card cycling roles with dark ink on textured paper.
+- [x] **Spiral-Notebook Role Flip Card:**
+  - Exactly four roles in sequential order: (1) Aspiring Software Engineer, (2) Full Stack Developer, (3) Problem Solver, (4) AI/ML Student.
+  - Single source of truth driving index; no random picks.
+  - Synchronized timer with Strict Mode unmount cleanup; manual click/tap advances and resets auto-timer.
+  - Counter reads 01 / 04 to 04 / 04.
 - [x] **Pull-Cord Theme Lamp:** Interactive Verlet physics pull cord switching dark/light themes.
 
 ### C. Academic & Development Journey Timeline (Phase c Implemented & Verified)
