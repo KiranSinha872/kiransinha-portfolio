@@ -188,18 +188,23 @@ Portfolio_kiran/
   - Back Face: verified passport with Mirai School of Technology enrollment, location badges, and direct external links to GitHub and LeetCode profiles.
   - Accessible modal dialog: ESC key to close, backdrop click, dedicated close button, `role="dialog"`, `aria-modal="true"`, body scroll locking, and `prefers-reduced-motion` compliance.
 
-### I. Contact & Questionnaire Experience
-- [ ] **Submission Endpoint:** POST to `/api/contact`.
-- [ ] **Security Checks:**
-  - Cloudflare Turnstile token verification (server-side).
-  - In-memory IP rate limiting (maximum 5 submissions per 10 minutes).
-  - Zod schema validation & input sanitization (strip HTML & control characters).
-- [ ] **Database Insertion:** Secure server-side insertion into `contact_messages` table.
-- [ ] **State Feedback:** Immediate loading spinner, descriptive error messages, and success confirmation screen.
-- [ ] **Direct Contact Channels:**
-  - Email mailto link (`profile.contactEmail` / `profile.email`)
-  - Phone link (`profile.phone`, if configured)
-  - LinkedIn direct link
+### I. Contact & Guided Questionnaire Experience (Phase e Implemented & Verified)
+- [x] **5-Step Interactive Guided Questionnaire:**
+  - Step 1: Opportunity Scope (*Full-Time Engineering*, *Internship / Co-op*, *Project / Contract*, *Open-Source & Research*).
+  - Step 2: Target Timeline (*Immediately*, *Within 1–3 Months*, *Flexible / Planning*).
+  - Step 3: Technology Focus (*Full-Stack / Next.js*, *AI & Machine Learning*, *Backend & Databases*, *Algorithms & Systems*).
+  - Step 4: Organization Type (*Fast-Paced Startup*, *Established Enterprise*, *Research Lab*, *Direct Builder*).
+  - Step 5: Contact Information (Name, Email, optional extra details).
+- [x] **Security & Validation Defense:**
+  - Preserves Cloudflare Turnstile CAPTCHA server-side validation.
+  - Preserves IP-based in-memory rate limiting (maximum 5 requests per 10 minutes).
+  - Preserves Zod schema validation & HTML sanitization via `contactMessageSchema`.
+- [x] **Database & Feedback Integration:**
+  - Server-side insertion into Supabase `contact_messages` table via existing `/api/contact` endpoint.
+  - Immediate visual feedback: step progress bar (`STEP 01 / 05` to `05 / 05`), loading spinner, error banner, and confirmation screen.
+- [x] **Direct Contact Channels:**
+  - One-click copy email button with clipboard confirmation.
+  - Direct links to LinkedIn and GitHub.
 
 ### J. Admin Portal & Data Management
 - [ ] **Authentication:** Supabase Auth session guard with middleware protection.
