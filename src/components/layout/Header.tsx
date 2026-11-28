@@ -103,7 +103,7 @@ export default function PublicHeader({ profile: initialProfile }: HeaderProps = 
 
           {tagline && (
             <span
-              className="hidden xl:block text-xs uppercase tracking-[0.14em] text-[var(--muted)] truncate font-medium max-w-[240px]"
+              className="hidden xl:inline-block text-xs uppercase tracking-[0.14em] text-[var(--muted)] font-medium whitespace-nowrap"
               title={tagline}
             >
               {tagline}

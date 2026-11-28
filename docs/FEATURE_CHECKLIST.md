@@ -1,20 +1,19 @@
 # Feature Checklist & Codebase Audit — Kiran Sinha Portfolio
 
 > **Branch:** `redesign-v2`  
-> **Status:** Phase 1 Complete (Foundations, Design Tokens, Layout Shell, Lenis Smooth Scroll, Theme Switching)  
+> **Status:** Hero Phase Complete (Intro Loader, Flip Calendar, Verlet Physics Pull-Cord, Hero Layout, Cut-Out Portrait)  
 > **Rule:** Every item in this checklist must continue to function seamlessly throughout and following the redesign.
 
 ---
 
-## Phase 1 Progress Status
-- [x] **Dependencies:** Installed `lenis` smooth scrolling without disturbing any existing dependencies.
-- [x] **Typography:** Downloaded `'Onest'` font (`onest-latin.woff2`, `onest-latin-ext.woff2`) into `public/fonts/` and integrated via `next/font/local`. Preserved `'Bebas Neue'` strictly for the `K/S` brand monogram.
-- [x] **Design Tokens:** Added comprehensive light (`#E8E4E0`) and dark (`#1A1818`) dual-theme color tokens, spring and soft easing curves, adaptive rem grid scaling, border radii, and `.shell` container classes to `src/app/globals.css`.
-- [x] **Theme Switcher:** Created `ThemeProvider` with View Transitions API crossfade animation (`::view-transition-old(root)`, `::view-transition-new(root)`), localStorage persistence (`theme-mode`), and fallback for browsers without native view transitions.
-- [x] **Smooth Scrolling:** Created `SmoothScroll` provider wrapping Lenis with inertial dampening and `prefers-reduced-motion` compliance.
-- [x] **Navigation Shell:** Updated `PublicHeader` with live local-time pill (`Delhi, IN` with Asia/Kolkata timezone ticker), Bebas Neue `K/S` monogram, theme toggle button, and responsive mobile drawer.
-- [x] **Footer Shell:** Updated `PublicFooter` with `Design inspired by Rishi Thakor` credit, social links, and discreet admin login link.
-- [x] **Backward Compatibility:** All existing sections (`Hero`, `About`, `SkillsSection`, `ProjectsSection`, `CertificationsSection`, `EducationSection`, `CodingProfilesSection`, `ContactSection`) remain 100% functional and accessible inside the new shell.
+## Phase Progress Status
+- [x] **Phase 1 Foundations:** Design tokens, Lenis smooth scrolling, Onest font (`Bebas Neue` for K/S logo only), theme switching infrastructure, and layout shell.
+- [x] **Header Tagline Fix:** Replaced clipping truncate on desktop with full untruncated display when space permits (`xl:inline-block`), hidden below `xl` for clean balance.
+- [x] **Intro Loader:** Staggered sliding discipline pills (Kiran Sinha, Full-Stack Development, Data Structures & Algorithms, AI & Machine Learning, React & Next.js Builder, Problem Solver) + 000-100 numeric counter. Controlled by `sessionStorage` (once per session) and respects `prefers-reduced-motion`.
+- [x] **Flip Calendar:** Spiral-notebook flip card cycling Kiran's 5 verified roles (Full-Stack Developer, AI/ML Student, React & Next.js Builder, Problem Solver, Aspiring Software Engineer) with 3D leaf flip animation and `01 / 05` counter. Supports manual click/tap and keyboard Enter/Space.
+- [x] **Pull-Cord Lamp:** Canvas-based 26-node Verlet integration rope with real physics ($G = 4600\text{ px/s}^2$), pendulum damping, pointer capture, and touch dragging. Pulling past travel trips the switch and triggers View Transitions theme toggle. Loops pause when off-screen or motionless.
+- [x] **Cut-Out Portrait:** Optimized copy in `public/images/my-photo.png` with atmospheric backdrop circle and floating "My developer card" button.
+- [x] **Hero Actions & Bottom Bar:** "Get in touch" (smooth scrolls to `#contact`), "See my work" (smooth scrolls to `#projects`), working Resume viewer modal with download fallback, and LinkedIn link. Bottom status bar with "Available for internships", "Based in Delhi, India", and scroll hint.
 
 ---
 
