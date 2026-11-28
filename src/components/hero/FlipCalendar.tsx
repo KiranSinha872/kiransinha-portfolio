@@ -68,24 +68,25 @@ export default function FlipCalendar() {
       }}
       aria-label={`Role: ${currentRole}. Press enter to cycle.`}
     >
-      <div className="relative inline-flex flex-col rounded-xl border border-[#C5BFB8] dark:border-[#383333] bg-gradient-to-b from-[#FAF8F5] to-[#EAE6DF] dark:from-[#2A2525] dark:to-[#1E1B1B] shadow-[0_4px_12px_rgba(0,0,0,0.08),0_1px_2px_rgba(0,0,0,0.06)] px-4 py-2 sm:px-5 sm:py-2.5 transition-transform duration-300 group-hover:-translate-y-0.5">
+      {/* Paper Card - Always tactile ivory paper with crisp dark ink in both themes */}
+      <div className="relative inline-flex flex-col rounded-2xl border border-[#D5CFC7] bg-gradient-to-b from-[#FBF9F5] via-[#F4EFE6] to-[#EAE3D8] shadow-[0_6px_18px_rgba(0,0,0,0.12),0_1px_3px_rgba(0,0,0,0.08)] px-5 py-3 sm:px-6 sm:py-3.5 transition-transform duration-300 group-hover:-translate-y-0.5">
         
         {/* Top Wire Spiral Rings */}
-        <div className="absolute -top-2 inset-x-0 flex items-center justify-around px-3 pointer-events-none">
+        <div className="absolute -top-2.5 inset-x-0 flex items-center justify-around px-4 pointer-events-none">
           {Array.from({ length: 6 }).map((_, i) => (
             <div
               key={i}
-              className="w-1.5 h-3.5 rounded-full bg-gradient-to-b from-[#8C827A] to-[#4A423D] dark:from-[#665E5E] dark:to-[#221F1F] shadow-sm"
+              className="w-2 h-4 rounded-full bg-gradient-to-b from-[#9C9288] via-[#5C544E] to-[#2B2724] shadow-sm border-t border-white/40"
             />
           ))}
         </div>
 
         {/* Calendar Body */}
-        <div className="flex items-center justify-between gap-4 mt-0.5">
-          {/* Animated Role Text */}
-          <div className="relative h-6 sm:h-7 overflow-hidden min-w-[200px] sm:min-w-[240px]">
+        <div className="flex items-center justify-between gap-6 sm:gap-8 mt-1">
+          {/* Animated Role Text - Large and bold dark ink */}
+          <div className="relative h-8 sm:h-9 overflow-hidden min-w-[240px] sm:min-w-[320px]">
             <span
-              className={`block text-sm sm:text-base font-bold text-[var(--foreground)] tracking-tight whitespace-nowrap transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              className={`block text-lg sm:text-2xl font-bold text-[#161616] tracking-tight whitespace-nowrap transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                 isFlipping
                   ? '-translate-y-full opacity-0'
                   : 'translate-y-0 opacity-100'
@@ -94,7 +95,7 @@ export default function FlipCalendar() {
               {currentRole}
             </span>
             <span
-              className={`absolute inset-0 block text-sm sm:text-base font-bold text-[var(--foreground)] tracking-tight whitespace-nowrap transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              className={`absolute inset-0 block text-lg sm:text-2xl font-bold text-[#161616] tracking-tight whitespace-nowrap transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                 isFlipping
                   ? 'translate-y-0 opacity-100'
                   : 'translate-y-full opacity-0'
@@ -104,16 +105,31 @@ export default function FlipCalendar() {
             </span>
           </div>
 
-          {/* Odometer Numeric Counter: 01 / 05 */}
-          <div className="flex items-center gap-1 text-[10px] sm:text-[11px] font-mono tracking-wider font-semibold text-[var(--muted)] border-l border-[var(--line)] pl-3">
-            <span className="tnum text-[#0B7658] dark:text-[#34D399]">
-              {isFlipping ? nextCount : currentCount}
+          {/* Odometer Counter (e.g. 01 / 05) in dark ink */}
+          <div className="relative h-5 overflow-hidden font-mono text-xs sm:text-sm font-semibold text-[#5C5650] select-none shrink-0 border-l border-[#D5CFC7] pl-3.5">
+            <span
+              className={`block transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                isFlipping
+                  ? '-translate-y-full opacity-0'
+                  : 'translate-y-0 opacity-100'
+              }`}
+            >
+              {currentCount}
+            </span>
+            <span
+              className={`absolute inset-0 pl-3.5 block transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                isFlipping
+                  ? 'translate-y-0 opacity-100'
+                  : 'translate-y-full opacity-0'
+              }`}
+            >
+              {nextCount}
             </span>
           </div>
         </div>
 
-        {/* Paper Leaf Drop-Shadow line at bottom */}
-        <div className="absolute inset-x-2 -bottom-1 h-1 bg-[#D8D2C8] dark:bg-[#181515] rounded-b-md -z-10 shadow-xs" />
+        {/* Paper fold bottom edge shadow */}
+        <div className="absolute inset-x-0 bottom-0 h-[1.5px] bg-[#D0C8BF] rounded-b-2xl pointer-events-none" />
       </div>
     </div>
   );

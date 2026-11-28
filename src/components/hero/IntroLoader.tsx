@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useSyncExternalStore } from 'react';
 
 const DISCIPLINES = [
   { text: 'Kiran Sinha', bg: '#1F1C1C', color: '#E8E4E0', dir: 1 },
@@ -11,31 +11,30 @@ const DISCIPLINES = [
   { text: 'Problem Solver', bg: '#C4B0B0', color: '#1A1818', dir: -1 },
 ];
 
-function checkShouldShowLoader(): boolean {
-  if (typeof window === 'undefined') return false;
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    document.body.classList.add('ready');
-    return false;
-  }
-  try {
-    if (sessionStorage.getItem('portfolio_loader_seen') === 'true') {
-      document.body.classList.add('ready');
-      return false;
-    }
-    sessionStorage.setItem('portfolio_loader_seen', 'true');
-    return true;
-  } catch {
-    return false;
-  }
-}
+const emptySubscribe = () => () => {};
 
 export default function IntroLoader({ onComplete }: { onComplete?: () => void }) {
-  const [visible, setVisible] = useState<boolean>(checkShouldShowLoader);
+  // useSyncExternalStore guarantees identical server/client initial render (null) to prevent hydration mismatches
+  const isMounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
   const [progress, setProgress] = useState(0);
   const [isExiting, setIsExiting] = useState(false);
+  const [isDone, setIsDone] = useState(false);
 
   useEffect(() => {
-    if (!visible) {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.body.classList.add('ready');
+      onComplete?.();
+      return;
+    }
+
+    try {
+      if (sessionStorage.getItem('portfolio_loader_seen') === 'true') {
+        document.body.classList.add('ready');
+        onComplete?.();
+        return;
+      }
+      sessionStorage.setItem('portfolio_loader_seen', 'true');
+    } catch {
       document.body.classList.add('ready');
       onComplete?.();
       return;
@@ -56,7 +55,7 @@ export default function IntroLoader({ onComplete }: { onComplete?: () => void })
           setIsExiting(true);
           document.body.classList.add('ready');
           setTimeout(() => {
-            setVisible(false);
+            setIsDone(true);
             onComplete?.();
           }, 850);
         }, 150);
@@ -65,9 +64,20 @@ export default function IntroLoader({ onComplete }: { onComplete?: () => void })
 
     const animId = requestAnimationFrame(frame);
     return () => cancelAnimationFrame(animId);
-  }, [visible, onComplete]);
+  }, [onComplete]);
 
-  if (!visible) return null;
+  // Render null during SSR and after completion
+  if (!isMounted || isDone) return null;
+
+  // Skip rendering if already visited in this session
+  if (typeof window !== 'undefined') {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return null;
+    try {
+      if (sessionStorage.getItem('portfolio_loader_seen') === 'true' && progress === 0 && !isExiting) {
+        return null;
+      }
+    } catch {}
+  }
 
   return (
     <div
@@ -86,7 +96,6 @@ export default function IntroLoader({ onComplete }: { onComplete?: () => void })
       {/* Center Staggered Discipline Pills */}
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-2.5 px-4 pointer-events-none">
         {DISCIPLINES.map((item, idx) => {
-          // Pill entrance activates sequentially based on progress threshold
           const threshold = idx * 14;
           const entered = progress >= threshold;
           const offset = item.dir * 40;
@@ -101,36 +110,27 @@ export default function IntroLoader({ onComplete }: { onComplete?: () => void })
                   ? 'translate3d(0, 0, 0)'
                   : `translate3d(${offset}px, 0, 0)`,
                 opacity: entered ? 1 : 0,
+                transition:
+                  'transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.45s ease',
               }}
-              className="px-6 py-2.5 rounded-full text-xs sm:text-sm font-semibold tracking-wide shadow-md transition-all duration-400 ease-[cubic-bezier(0.22,1,0.36,1)]"
+              className="px-5 py-2.5 sm:px-7 sm:py-3 rounded-full text-xs sm:text-sm font-semibold tracking-wide shadow-lg border border-white/10 uppercase"
             >
-              <span>{item.text}</span>
+              {item.text}
             </div>
           );
         })}
       </div>
 
-      {/* Bottom HUD: Counter and Progress Bar */}
-      <div className="absolute bottom-10 inset-x-0 shell flex flex-col sm:flex-row items-center justify-between gap-4 text-[#E8E4E0] text-xs">
-        <div className="flex items-center gap-2 text-[var(--muted)]">
-          <span className="font-bold text-[#E8E4E0]">Kiran Sinha</span>
-          <span>·</span>
-          <span>B.Tech AI/ML Student & Software Engineer</span>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <span className="text-[11px] text-[var(--muted)] uppercase tracking-wider">
-            Loading Portfolio
-          </span>
-          <span className="tnum font-mono text-base font-bold text-[#E8E4E0] w-12 text-right">
-            {String(progress).padStart(3, '0')}
-          </span>
-          <div className="w-24 sm:w-36 h-1 bg-white/10 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-[#E8E4E0] transition-all duration-75 ease-out rounded-full"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
+      {/* Numeric Progress Counter 000 -> 100 */}
+      <div className="absolute bottom-10 inset-x-0 flex flex-col items-center justify-center gap-2 pointer-events-none">
+        <span className="font-mono text-2xl sm:text-3xl font-bold tracking-widest text-[#E8E4E0] tnum">
+          {String(progress).padStart(3, '0')}
+        </span>
+        <div className="w-24 h-[2px] bg-white/20 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-[#0B7658] transition-all duration-75 ease-out rounded-full"
+            style={{ width: `${progress}%` }}
+          />
         </div>
       </div>
     </div>

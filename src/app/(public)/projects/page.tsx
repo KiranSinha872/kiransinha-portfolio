@@ -23,13 +23,13 @@ export default async function AllProjectsPage() {
   const githubUrl = profile?.githubUrl || 'https://github.com';
 
   return (
-    <div className="py-12 sm:py-16 lg:py-20 bg-[#F9F9F9] min-h-[calc(100vh-140px)] border-b border-[#DADADA]">
+    <div className="py-12 sm:py-16 lg:py-20 bg-[var(--background)] text-[var(--foreground)] min-h-[calc(100vh-140px)] border-b border-[var(--line)] transition-colors duration-250">
       <Container>
         {/* Back Link */}
         <div className="mb-8">
           <Link
             href="/#projects"
-            className="group inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#5B5B5B] hover:text-[#0B7658] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B7658]"
+            className="group inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[var(--muted)] hover:text-[#0B7658] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B7658]"
           >
             <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
             <span>Back to Home</span>
@@ -37,10 +37,10 @@ export default async function AllProjectsPage() {
         </div>
 
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 border-b border-[#DADADA]">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 border-b border-[var(--line)]">
           <div>
             <div className="inline-flex flex-col items-start">
-              <span className="text-xs font-semibold tracking-[0.2em] uppercase text-[#121212]">
+              <span className="text-xs font-semibold tracking-[0.2em] uppercase text-[var(--muted)]">
                 Portfolio Archive
               </span>
               <span
@@ -48,10 +48,10 @@ export default async function AllProjectsPage() {
                 aria-hidden="true"
               />
             </div>
-            <h1 className="mt-4 text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#121212] font-heading">
+            <h1 className="mt-4 text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--foreground)] font-heading">
               All Projects
             </h1>
-            <p className="mt-2 text-sm sm:text-base text-[#5B5B5B] max-w-xl">
+            <p className="mt-2 text-sm sm:text-base text-[var(--muted)] max-w-xl">
               A comprehensive showcase of software engineering applications, tools, and technical explorations.
             </p>
           </div>

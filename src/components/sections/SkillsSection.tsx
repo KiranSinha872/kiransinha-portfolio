@@ -90,7 +90,7 @@ export default function SkillsSection({ skills: initialSkills }: SkillsSectionPr
   return (
     <section
       id="skills"
-      className="py-16 sm:py-24 bg-[#F9F9F9] text-[#111] border-b border-[#E8E8E8]"
+      className="py-16 sm:py-24 bg-[var(--background)] text-[var(--foreground)] border-b border-[var(--line)] transition-colors duration-250"
     >
       <Container>
         {/* Section Heading: Existing label style, title and one-line subtitle */}
@@ -100,8 +100,8 @@ export default function SkillsSection({ skills: initialSkills }: SkillsSectionPr
           description="Technical capabilities, frameworks, and engineering disciplines."
         />
 
-        {/* Dynamic Category Cards Grid: 1 col on mobile, 2 on tablet, 3 on desktop (max width 1200px) */}
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-[1200px] mx-auto">
+        {/* Dynamic Category Cards Grid: 1 col on mobile, 2 on tablet, 3 on desktop */}
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {categoryOrder.map((category) => {
             const categorySkills = groupedSkills.get(category) || [];
             if (categorySkills.length === 0) return null;
@@ -113,7 +113,7 @@ export default function SkillsSection({ skills: initialSkills }: SkillsSectionPr
               <article
                 key={category}
                 aria-labelledby={headingId}
-                className="group relative flex flex-col justify-between bg-white border border-[#E8E8E8] rounded-2xl p-6 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.04)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#0B7658]/40 hover:shadow-md motion-reduce:hover:translate-y-0 h-full"
+                className="group relative flex flex-col justify-between bg-[var(--surface)] border border-[var(--line)] rounded-2xl p-6 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.04)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#0B7658]/40 hover:shadow-md motion-reduce:hover:translate-y-0 h-full"
               >
                 <div>
                   {/* Card Header: Icon tile (emerald tint) + Category Name + Muted Count */}
@@ -127,30 +127,35 @@ export default function SkillsSection({ skills: initialSkills }: SkillsSectionPr
                       </div>
                       <h3
                         id={headingId}
-                        className="text-base font-semibold text-[#111] tracking-tight truncate"
+                        className="text-base font-semibold text-[var(--foreground)] tracking-tight truncate"
                       >
                         {category}
                       </h3>
                     </div>
-                    <span className="text-xs text-[#5B5B5B] font-normal shrink-0">
-                      {categorySkills.length}{' '}
-                      {categorySkills.length === 1 ? 'skill' : 'skills'}
+                    <span className="text-xs font-mono text-[var(--muted)] shrink-0">
+                      {categorySkills.length} {categorySkills.length === 1 ? 'skill' : 'skills'}
                     </span>
                   </div>
 
-                  {/* Thin divider */}
-                  <hr className="my-5 border-[#E8E8E8]" aria-hidden="true" />
-
-                  {/* Skills Chips List */}
-                  <ul className="flex flex-wrap gap-2" role="list">
+                  {/* Skills Pill Cloud: flex-wrap list of interactive pills */}
+                  <ul className="mt-5 flex flex-wrap gap-2" role="list">
                     {categorySkills.map((skill) => (
                       <SkillBadge
-                        key={skill.name}
+                        key={skill.id || skill.name}
                         skill={skill}
                         category={category}
                       />
                     ))}
                   </ul>
+                </div>
+
+                {/* Subtle bottom accent line showing category active status */}
+                <div
+                  className="mt-6 pt-4 border-t border-[var(--line)] flex items-center justify-between text-[11px] text-[var(--muted)]"
+                  aria-hidden="true"
+                >
+                  <span className="uppercase tracking-wider font-mono">Synced</span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#0B7658]" />
                 </div>
               </article>
             );

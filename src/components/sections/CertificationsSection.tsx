@@ -37,7 +37,7 @@ export default function CertificationsSection({
       : DEFAULT_CERTIFICATIONS;
 
   return (
-    <section id="certifications" className="py-16 sm:py-24 bg-[#F1F1F1] border-b border-[#DADADA]">
+    <section id="certifications" className="py-16 sm:py-24 bg-[var(--background)] text-[var(--foreground)] border-b border-[var(--line)] transition-colors duration-250">
       <Container>
         <div className="max-w-4xl">
           {/* Section Header */}
@@ -48,7 +48,7 @@ export default function CertificationsSection({
           />
 
           {/* Clean Certification Rows with Dividers */}
-          <div className="mt-10 divide-y divide-[#DADADA] border-y border-[#DADADA]">
+          <div className="mt-10 divide-y divide-[var(--line)] border-y border-[var(--line)]">
             {data.map((cert, idx) => (
               <div
                 key={cert.id || idx}
@@ -57,7 +57,7 @@ export default function CertificationsSection({
                 {/* Left: Badge or Icon + Details */}
                 <div className="flex items-center gap-4">
                   {cert.badgeUrl ? (
-                    <div className="relative w-12 h-12 rounded-lg bg-white border border-[#DADADA] overflow-hidden shrink-0">
+                    <div className="relative w-12 h-12 rounded-lg bg-[var(--surface)] border border-[var(--line)] overflow-hidden shrink-0">
                       <Image
                         src={cert.badgeUrl}
                         alt={cert.title}
@@ -67,26 +67,26 @@ export default function CertificationsSection({
                       />
                     </div>
                   ) : (
-                    <div className="w-12 h-12 rounded-lg bg-white border border-[#DADADA] flex items-center justify-center text-[#0B7658] shrink-0">
+                    <div className="w-12 h-12 rounded-lg bg-[var(--surface)] border border-[var(--line)] flex items-center justify-center text-[#0B7658] shrink-0">
                       <Award className="w-6 h-6 stroke-[1.5]" />
                     </div>
                   )}
 
                   <div>
-                    <h3 className="text-base sm:text-lg font-bold text-[#121212] tracking-tight">
+                    <h3 className="text-base sm:text-lg font-bold text-[var(--foreground)] tracking-tight">
                       {cert.title}
                     </h3>
-                    <div className="flex flex-wrap items-center gap-2 mt-0.5 text-xs text-[#5B5B5B]">
-                      <span className="font-semibold text-[#121212]">{cert.issuer}</span>
-                      <span className="text-[#DADADA]">•</span>
+                    <div className="flex flex-wrap items-center gap-2 mt-0.5 text-xs text-[var(--muted)]">
+                      <span className="font-semibold text-[var(--foreground)]">{cert.issuer}</span>
+                      <span className="text-[var(--line)]">•</span>
                       <div className="flex items-center gap-1">
                         <Calendar className="w-3.5 h-3.5 text-[#0B7658]" />
                         <span>{cert.issueDate}</span>
                       </div>
                       {cert.credentialId && (
                         <>
-                          <span className="text-[#DADADA]">•</span>
-                          <span className="font-mono text-[11px] text-[#5B5B5B]">
+                          <span className="text-[var(--line)]">•</span>
+                          <span className="font-mono text-[11px] text-[var(--muted)]">
                             ID: {cert.credentialId}
                           </span>
                         </>
@@ -95,14 +95,14 @@ export default function CertificationsSection({
                   </div>
                 </div>
 
-                {/* Right: Verify Credential Button (opens new tab with rel="noopener noreferrer") */}
+                {/* Right: Verify Credential Button */}
                 {cert.credentialUrl && (
                   <div className="shrink-0 sm:self-center">
                     <a
                       href={cert.credentialUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-[#DADADA] bg-white text-[#121212] text-xs font-semibold hover:border-[#0B7658] hover:text-[#0B7658] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B7658] focus-visible:ring-offset-2"
+                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-[var(--line)] bg-[var(--chip-bg)] text-[var(--foreground)] text-xs font-semibold hover:border-[#0B7658] hover:text-[#0B7658] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B7658] focus-visible:ring-offset-2"
                     >
                       <span>Verify Credential</span>
                       <ArrowUpRight className="w-3.5 h-3.5 text-[#0B7658]" />

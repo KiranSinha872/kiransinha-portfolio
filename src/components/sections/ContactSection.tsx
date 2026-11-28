@@ -162,7 +162,7 @@ export default function ContactSection({ profile }: ContactSectionProps) {
   };
 
   return (
-    <section id="contact" className="py-16 sm:py-24 bg-[#F1F1F1] border-b border-[#DADADA]">
+    <section id="contact" className="py-16 sm:py-24 bg-[var(--background)] text-[var(--foreground)] border-b border-[var(--line)] transition-colors duration-250">
       <Container>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">
           
@@ -178,17 +178,17 @@ export default function ContactSection({ profile }: ContactSectionProps) {
               {/* Direct Contact Details */}
               <div className="mt-8 space-y-4">
                 {email && (
-                  <div className="flex items-center gap-3 text-sm text-[#121212]">
-                    <div className="w-9 h-9 rounded-lg bg-white border border-[#DADADA] flex items-center justify-center text-[#0B7658] shrink-0">
+                  <div className="flex items-center gap-3 text-sm text-[var(--foreground)]">
+                    <div className="w-9 h-9 rounded-lg bg-[var(--surface)] border border-[var(--line)] flex items-center justify-center text-[#0B7658] shrink-0">
                       <Mail className="w-4 h-4" />
                     </div>
                     <div className="min-w-0">
-                      <span className="text-[11px] font-semibold uppercase tracking-wider text-[#5B5B5B] block">
+                      <span className="text-[11px] font-semibold uppercase tracking-wider text-[var(--muted)] block">
                         Email
                       </span>
                       <a
                         href={`mailto:${email}`}
-                        className="font-medium text-[#121212] hover:text-[#0B7658] transition-colors truncate block"
+                        className="font-medium text-[var(--foreground)] hover:text-[#0B7658] transition-colors truncate block"
                       >
                         {email}
                       </a>
@@ -197,19 +197,19 @@ export default function ContactSection({ profile }: ContactSectionProps) {
                 )}
 
                 {linkedinUrl && (
-                  <div className="flex items-center gap-3 text-sm text-[#121212]">
-                    <div className="w-9 h-9 rounded-lg bg-white border border-[#DADADA] flex items-center justify-center text-[#0B7658] shrink-0">
+                  <div className="flex items-center gap-3 text-sm text-[var(--foreground)]">
+                    <div className="w-9 h-9 rounded-lg bg-[var(--surface)] border border-[var(--line)] flex items-center justify-center text-[#0B7658] shrink-0">
                       <LinkedInIcon className="w-4 h-4" />
                     </div>
                     <div className="min-w-0">
-                      <span className="text-[11px] font-semibold uppercase tracking-wider text-[#5B5B5B] block">
+                      <span className="text-[11px] font-semibold uppercase tracking-wider text-[var(--muted)] block">
                         LinkedIn
                       </span>
                       <a
                         href={linkedinUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="font-medium text-[#121212] hover:text-[#0B7658] transition-colors truncate block"
+                        className="font-medium text-[var(--foreground)] hover:text-[#0B7658] transition-colors truncate block"
                       >
                         {linkedinUrl.replace(/^https?:\/\/(www\.)?/, '')}
                       </a>
@@ -218,17 +218,17 @@ export default function ContactSection({ profile }: ContactSectionProps) {
                 )}
 
                 {phone && (
-                  <div className="flex items-center gap-3 text-sm text-[#121212]">
-                    <div className="w-9 h-9 rounded-lg bg-white border border-[#DADADA] flex items-center justify-center text-[#0B7658] shrink-0">
+                  <div className="flex items-center gap-3 text-sm text-[var(--foreground)]">
+                    <div className="w-9 h-9 rounded-lg bg-[var(--surface)] border border-[var(--line)] flex items-center justify-center text-[#0B7658] shrink-0">
                       <Phone className="w-4 h-4" />
                     </div>
                     <div className="min-w-0">
-                      <span className="text-[11px] font-semibold uppercase tracking-wider text-[#5B5B5B] block">
+                      <span className="text-[11px] font-semibold uppercase tracking-wider text-[var(--muted)] block">
                         Phone
                       </span>
                       <a
                         href={`tel:${phone}`}
-                        className="font-medium text-[#121212] hover:text-[#0B7658] transition-colors block"
+                        className="font-medium text-[var(--foreground)] hover:text-[#0B7658] transition-colors block"
                       >
                         {phone}
                       </a>
@@ -241,14 +241,14 @@ export default function ContactSection({ profile }: ContactSectionProps) {
             {/* Bordered CTA Box matching reference */}
             <a
               href="#contact-form"
-              className="group block p-6 rounded-xl border-2 border-[#0B7658] bg-white hover:bg-[#0B7658] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B7658]"
+              className="group block p-6 rounded-xl border-2 border-[#0B7658] bg-[var(--surface)] hover:bg-[#0B7658] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B7658]"
             >
               <div className="flex items-end justify-between">
                 <div>
                   <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0B7658] group-hover:text-white transition-colors block mb-1">
                     Let&apos;s Build
                   </span>
-                  <p className="font-heading text-2xl uppercase tracking-tight text-[#121212] group-hover:text-white transition-colors leading-tight">
+                  <p className="font-heading text-2xl uppercase tracking-tight text-[var(--foreground)] group-hover:text-white transition-colors leading-tight">
                     Something Great Together
                   </p>
                 </div>
@@ -259,27 +259,27 @@ export default function ContactSection({ profile }: ContactSectionProps) {
 
           {/* Right Column: Contact Message Form */}
           <div id="contact-form" className="lg:col-span-7">
-            <div className="bg-white border border-[#DADADA] rounded-2xl p-6 sm:p-8">
-              <h3 className="text-lg font-bold text-[#121212] tracking-tight mb-2">
+            <div className="bg-[var(--surface)] border border-[var(--line)] rounded-2xl p-6 sm:p-8">
+              <h3 className="text-lg font-bold text-[var(--foreground)] tracking-tight mb-2">
                 Send a Message
               </h3>
-              <p className="text-xs sm:text-sm text-[#5B5B5B] mb-6">
+              <p className="text-xs sm:text-sm text-[var(--muted)] mb-6">
                 Fill out the form below to reach me directly.
               </p>
 
               {status === 'success' ? (
-                <div className="p-6 rounded-xl bg-[#F9F9F9] border border-[#0B7658]/30 flex flex-col items-center text-center space-y-3">
+                <div className="p-6 rounded-xl bg-[var(--surface-2)] border border-[#0B7658]/30 flex flex-col items-center text-center space-y-3">
                   <CheckCircle2 className="w-10 h-10 text-[#0B7658]" />
-                  <h4 className="text-base font-bold text-[#121212]">
+                  <h4 className="text-base font-bold text-[var(--foreground)]">
                     Message Sent Successfully
                   </h4>
-                  <p className="text-xs sm:text-sm text-[#5B5B5B] max-w-sm">
+                  <p className="text-xs sm:text-sm text-[var(--muted)] max-w-sm">
                     Thank you for reaching out. Your message has been recorded and I will get back to you shortly.
                   </p>
                   <button
                     type="button"
                     onClick={() => setStatus('idle')}
-                    className="mt-3 px-5 py-2 rounded-full border border-[#DADADA] bg-white text-xs font-semibold text-[#121212] hover:border-[#0B7658] hover:text-[#0B7658] transition-colors cursor-pointer"
+                    className="mt-3 px-5 py-2 rounded-full border border-[var(--line)] bg-[var(--chip-bg)] text-xs font-semibold text-[var(--foreground)] hover:border-[#0B7658] hover:text-[#0B7658] transition-colors cursor-pointer"
                   >
                     Send Another Message
                   </button>
@@ -287,7 +287,7 @@ export default function ContactSection({ profile }: ContactSectionProps) {
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4" noValidate>
                   {status === 'error' && (
-                    <div className="p-3.5 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
+                    <div className="p-3.5 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs flex items-center gap-2">
                       <AlertCircle className="w-4 h-4 shrink-0" />
                       <span>{errorMessage}</span>
                     </div>
@@ -296,7 +296,7 @@ export default function ContactSection({ profile }: ContactSectionProps) {
                   <div>
                     <label
                       htmlFor="name"
-                      className="block text-xs font-semibold uppercase tracking-wider text-[#121212] mb-1.5"
+                      className="block text-xs font-semibold uppercase tracking-wider text-[var(--foreground)] mb-1.5"
                     >
                       Your Name <span className="text-[#0B7658]">*</span>
                     </label>
@@ -308,19 +308,19 @@ export default function ContactSection({ profile }: ContactSectionProps) {
                       value={formData.name}
                       onChange={handleChange}
                       placeholder="e.g. Alex Johnson"
-                      className={`w-full px-4 py-2.5 rounded-lg bg-[#F9F9F9] border ${
-                        fieldErrors.name ? 'border-red-500' : 'border-[#DADADA]'
-                      } text-sm text-[#121212] placeholder:text-[#5B5B5B] focus:outline-none focus:border-[#0B7658] focus:ring-1 focus:ring-[#0B7658] transition-colors`}
+                      className={`w-full px-4 py-2.5 rounded-lg bg-[var(--surface-2)] border ${
+                        fieldErrors.name ? 'border-red-500' : 'border-[var(--line)]'
+                      } text-sm text-[var(--foreground)] placeholder:text-[var(--muted)] focus:outline-none focus:border-[#0B7658] focus:ring-1 focus:ring-[#0B7658] transition-colors`}
                     />
                     {fieldErrors.name && (
-                      <p className="text-xs text-red-600 mt-1">{fieldErrors.name}</p>
+                      <p className="text-xs text-red-500 mt-1">{fieldErrors.name}</p>
                     )}
                   </div>
 
                   <div>
                     <label
                       htmlFor="email"
-                      className="block text-xs font-semibold uppercase tracking-wider text-[#121212] mb-1.5"
+                      className="block text-xs font-semibold uppercase tracking-wider text-[var(--foreground)] mb-1.5"
                     >
                       Email Address <span className="text-[#0B7658]">*</span>
                     </label>
@@ -332,19 +332,19 @@ export default function ContactSection({ profile }: ContactSectionProps) {
                       value={formData.email}
                       onChange={handleChange}
                       placeholder="you@domain.com"
-                      className={`w-full px-4 py-2.5 rounded-lg bg-[#F9F9F9] border ${
-                        fieldErrors.email ? 'border-red-500' : 'border-[#DADADA]'
-                      } text-sm text-[#121212] placeholder:text-[#5B5B5B] focus:outline-none focus:border-[#0B7658] focus:ring-1 focus:ring-[#0B7658] transition-colors`}
+                      className={`w-full px-4 py-2.5 rounded-lg bg-[var(--surface-2)] border ${
+                        fieldErrors.email ? 'border-red-500' : 'border-[var(--line)]'
+                      } text-sm text-[var(--foreground)] placeholder:text-[var(--muted)] focus:outline-none focus:border-[#0B7658] focus:ring-1 focus:ring-[#0B7658] transition-colors`}
                     />
                     {fieldErrors.email && (
-                      <p className="text-xs text-red-600 mt-1">{fieldErrors.email}</p>
+                      <p className="text-xs text-red-500 mt-1">{fieldErrors.email}</p>
                     )}
                   </div>
 
                   <div>
                     <label
                       htmlFor="message"
-                      className="block text-xs font-semibold uppercase tracking-wider text-[#121212] mb-1.5"
+                      className="block text-xs font-semibold uppercase tracking-wider text-[var(--foreground)] mb-1.5"
                     >
                       Message <span className="text-[#0B7658]">*</span>
                     </label>
@@ -356,12 +356,12 @@ export default function ContactSection({ profile }: ContactSectionProps) {
                       value={formData.message}
                       onChange={handleChange}
                       placeholder="What would you like to discuss?"
-                      className={`w-full px-4 py-2.5 rounded-lg bg-[#F9F9F9] border ${
-                        fieldErrors.message ? 'border-red-500' : 'border-[#DADADA]'
-                      } text-sm text-[#121212] placeholder:text-[#5B5B5B] focus:outline-none focus:border-[#0B7658] focus:ring-1 focus:ring-[#0B7658] transition-colors resize-y`}
+                      className={`w-full px-4 py-2.5 rounded-lg bg-[var(--surface-2)] border ${
+                        fieldErrors.message ? 'border-red-500' : 'border-[var(--line)]'
+                      } text-sm text-[var(--foreground)] placeholder:text-[var(--muted)] focus:outline-none focus:border-[#0B7658] focus:ring-1 focus:ring-[#0B7658] transition-colors resize-y`}
                     />
                     {fieldErrors.message && (
-                      <p className="text-xs text-red-600 mt-1">{fieldErrors.message}</p>
+                      <p className="text-xs text-red-500 mt-1">{fieldErrors.message}</p>
                     )}
                   </div>
 

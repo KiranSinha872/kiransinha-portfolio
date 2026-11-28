@@ -24,7 +24,7 @@ export default function SkillBadge({ skill, category }: SkillBadgeProps) {
   const accessibleColor = icon ? getAccessibleBrandColor(icon.hex) : '#0B7658';
 
   return (
-    <li className="inline-flex items-center gap-2 px-3 py-2 rounded-full border border-[#E8E8E8] bg-[#FAFAFA] text-sm font-medium text-[#111] transition-all duration-200 hover:border-[#0B7658] hover:bg-white focus-within:ring-2 focus-within:ring-[#0B7658] focus-within:ring-offset-2 select-none">
+    <li className="inline-flex items-center gap-2 px-3 py-2 rounded-full border border-[var(--line)] bg-[var(--chip-bg)] text-sm font-medium text-[var(--foreground)] transition-all duration-200 hover:border-[#0B7658] hover:bg-[var(--chip-bg-h)] focus-within:ring-2 focus-within:ring-[#0B7658] focus-within:ring-offset-2 select-none">
       {icon ? (
         <svg
           role="img"

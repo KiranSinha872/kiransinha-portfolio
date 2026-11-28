@@ -45,7 +45,7 @@ export default function PublicHero({ profile }: HeroProps) {
       className="relative bg-[var(--background)] text-[var(--foreground)] border-b border-[var(--line)] overflow-hidden pt-6 sm:pt-10 lg:pt-12 pb-0 transition-colors duration-250"
       aria-label="Introduction"
     >
-      {/* 1. Staggered Intro Loader (Session-based, reduced-motion compliant) */}
+      {/* 1. Staggered Intro Loader (Session-based, reduced-motion compliant, hydration-safe) */}
       <IntroLoader />
 
       {/* 2. Verlet Physics Pull-Cord Lamp */}
@@ -74,8 +74,13 @@ export default function PublicHero({ profile }: HeroProps) {
                 Hi, I&apos;m Kiran.
               </h1>
 
+              {/* Grey "I am a" connector line matching the reference */}
+              <p className="text-sm sm:text-base font-semibold uppercase tracking-wider text-[var(--muted)] pt-1">
+                I am a
+              </p>
+
               {/* Spiral-Notebook Flip Card Cycling Roles */}
-              <div className="pt-2 pb-1">
+              <div className="pt-0.5 pb-1">
                 <FlipCalendar />
               </div>
             </motion.div>
@@ -146,11 +151,11 @@ export default function PublicHero({ profile }: HeroProps) {
                 aria-hidden="true"
               />
 
-              {/* Floating "My developer card" Badge on the portrait */}
+              {/* Floating "My developer card" Badge on the portrait (Placed at chest area, keeping face clear) */}
               <button
                 type="button"
                 onClick={() => scrollToSection('developer-card-placeholder')}
-                className="absolute top-12 left-4 sm:left-2 z-20 inline-flex items-center gap-2 px-3.5 py-2 rounded-full border border-[var(--line)] bg-[var(--background)]/90 backdrop-blur-md shadow-lg text-xs font-semibold text-[var(--foreground)] hover:border-[#0B7658] hover:scale-105 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B7658]"
+                className="absolute top-[52%] sm:top-[48%] -left-3 sm:-left-6 z-20 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--line)] bg-[var(--background)]/95 backdrop-blur-md shadow-xl text-xs font-semibold text-[var(--foreground)] hover:border-[#0B7658] hover:scale-105 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B7658]"
                 title="Explore Developer Card"
               >
                 <Sparkles className="w-3.5 h-3.5 text-[#0B7658]" />

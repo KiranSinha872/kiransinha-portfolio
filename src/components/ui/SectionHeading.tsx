@@ -27,7 +27,7 @@ export default function SectionHeading({
     >
       {label && (
         <div className={`inline-flex flex-col ${isCenter ? 'items-center' : 'items-start'}`}>
-          <span className="text-xs font-semibold tracking-[0.2em] uppercase text-[#5B5B5B]">
+          <span className="text-xs font-semibold tracking-[0.2em] uppercase text-[var(--muted)]">
             {label}
           </span>
           <span
@@ -38,13 +38,13 @@ export default function SectionHeading({
       )}
 
       {(title || children) && (
-        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-[#121212]">
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-[var(--foreground)] font-heading">
           {title || children}
         </h2>
       )}
 
       {description && (
-        <p className="text-sm sm:text-base text-[#5B5B5B] max-w-2xl leading-relaxed">
+        <p className="text-sm sm:text-base text-[var(--muted)] max-w-2xl leading-relaxed">
           {description}
         </p>
       )}

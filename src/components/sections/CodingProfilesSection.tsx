@@ -12,7 +12,6 @@ interface CodingProfilesSectionProps {
 }
 
 export default function CodingProfilesSection({ profile }: CodingProfilesSectionProps) {
-  // Helper to extract social URL from profile fields or socials array
   const getUrl = (key: 'github' | 'leetcode' | 'codechef' | 'codeforces') => {
     if (key === 'github' && profile?.githubUrl) return profile.githubUrl;
     if (key === 'leetcode' && profile?.leetcodeUrl) return profile.leetcodeUrl;
@@ -46,7 +45,7 @@ export default function CodingProfilesSection({ profile }: CodingProfilesSection
       name: 'GitHub',
       handle: getHandle(getUrl('github'), '@kiransinha'),
       url: getUrl('github'),
-      icon: <GitHubIcon className="w-5 h-5 text-[#121212]" />,
+      icon: <GitHubIcon className="w-5 h-5 text-[var(--foreground)]" />,
     },
     {
       id: 'leetcode',
@@ -71,7 +70,6 @@ export default function CodingProfilesSection({ profile }: CodingProfilesSection
     },
   ];
 
-  // Render only platforms that have a configured URL
   const activePlatforms = platforms.filter((p) => p.url && p.url.trim().length > 0);
 
   if (activePlatforms.length === 0) {
@@ -79,7 +77,7 @@ export default function CodingProfilesSection({ profile }: CodingProfilesSection
   }
 
   return (
-    <section id="coding-profiles" className="py-16 sm:py-24 bg-[#F9F9F9] border-b border-[#DADADA]">
+    <section id="coding-profiles" className="py-16 sm:py-24 bg-[var(--surface)] text-[var(--foreground)] border-b border-[var(--line)] transition-colors duration-250">
       <Container>
         {/* Section Heading */}
         <SectionHeading
@@ -96,23 +94,23 @@ export default function CodingProfilesSection({ profile }: CodingProfilesSection
               href={platform.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-white border border-[#DADADA] rounded-xl p-5 hover:border-[#0B7658] transition-colors flex items-center justify-between group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B7658]"
+              className="bg-[var(--chip-bg)] border border-[var(--line)] rounded-xl p-5 hover:border-[#0B7658] transition-colors flex items-center justify-between group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B7658]"
             >
               <div className="flex items-center gap-3.5">
-                <div className="w-10 h-10 rounded-lg bg-[#F1F1F1] border border-[#DADADA] flex items-center justify-center shrink-0">
+                <div className="w-10 h-10 rounded-lg bg-[var(--surface-2)] border border-[var(--line)] flex items-center justify-center shrink-0">
                   {platform.icon}
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-[#121212] tracking-tight group-hover:text-[#0B7658] transition-colors">
+                  <h3 className="text-sm font-bold text-[var(--foreground)] tracking-tight group-hover:text-[#0B7658] transition-colors">
                     {platform.name}
                   </h3>
-                  <span className="text-xs font-mono text-[#5B5B5B]">
+                  <span className="text-xs font-mono text-[var(--muted)]">
                     {platform.handle}
                   </span>
                 </div>
               </div>
 
-              <ArrowUpRight className="w-4 h-4 text-[#5B5B5B] group-hover:text-[#0B7658] transition-colors shrink-0" />
+              <ArrowUpRight className="w-4 h-4 text-[var(--muted)] group-hover:text-[#0B7658] transition-colors shrink-0" />
             </a>
           ))}
         </div>

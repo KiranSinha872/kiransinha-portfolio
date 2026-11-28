@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { Menu, X, Sun, Moon } from 'lucide-react';
-import { subscribeToProfile } from '@/lib/services/firestore';
 import { useTheme } from '@/components/theme/ThemeProvider';
 import type { Profile } from '@/types';
+
+const emptySubscribe = () => () => {};
 
 const NAV_LINKS = [
   { name: 'About', href: '/#about' },
@@ -21,15 +22,13 @@ interface HeaderProps {
   profile?: Profile | null;
 }
 
-export default function PublicHeader({ profile: initialProfile }: HeaderProps = {}) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export default function PublicHeader({ profile }: HeaderProps = {}) {
   const [isOpen, setIsOpen] = useState(false);
-  const [clientTagline, setClientTagline] = useState<string | null>(null);
   const [localTime, setLocalTime] = useState<string>('');
+  const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
   const { mode, toggleMode } = useTheme();
 
-  const tagline = clientTagline ?? (initialProfile?.title || initialProfile?.headline || '');
-
-  // Live Delhi, IN local time ticker (Asia/Kolkata timezone)
   useEffect(() => {
     const updateTime = () => {
       try {
@@ -49,19 +48,6 @@ export default function PublicHeader({ profile: initialProfile }: HeaderProps = 
 
     updateTime();
     const interval = setInterval(updateTime, 10000);
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    if (initialProfile) return;
-
-    const unsub = subscribeToProfile((profile) => {
-      if (profile?.title) {
-        setClientTagline(profile.title);
-      } else if (profile?.headline) {
-        setClientTagline(profile.headline);
-      }
-    });
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setIsOpen(false);
@@ -69,17 +55,17 @@ export default function PublicHeader({ profile: initialProfile }: HeaderProps = 
     window.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      unsub();
+      clearInterval(interval);
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [initialProfile]);
+  }, []);
 
   return (
     <header className="sticky top-0 z-40 w-full bg-[var(--background)]/90 backdrop-blur-md border-b border-[var(--line)] transition-colors duration-250">
       <div className="shell h-16 sm:h-18 flex items-center justify-between gap-4">
         
-        {/* Left: Local-time pill (Delhi, IN) + Tagline */}
-        <div className="flex items-center gap-3 min-w-0">
+        {/* Left: Local-time pill (Delhi, IN) - Tagline removed entirely to eliminate any overlap */}
+        <div className="flex items-center shrink-0">
           <div
             className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[var(--line)] bg-[var(--chip-bg)] text-xs text-[var(--foreground)] shrink-0 select-none"
             title="Local Time in Delhi, India (Asia/Kolkata)"
@@ -100,15 +86,6 @@ export default function PublicHeader({ profile: initialProfile }: HeaderProps = 
               </>
             )}
           </div>
-
-          {tagline && (
-            <span
-              className="hidden xl:inline-block text-xs uppercase tracking-[0.14em] text-[var(--muted)] font-medium whitespace-nowrap"
-              title={tagline}
-            >
-              {tagline}
-            </span>
-          )}
         </div>
 
         {/* Center: KS Logo with green diagonal slash (Preserving Bebas Neue ONLY for monogram) */}
@@ -157,42 +134,46 @@ export default function PublicHeader({ profile: initialProfile }: HeaderProps = 
             aria-label={`Switch to ${mode === 'dark' ? 'light' : 'dark'} mode`}
             title={`Switch to ${mode === 'dark' ? 'light' : 'dark'} mode`}
           >
-            {mode === 'dark' ? (
-              <Sun className="w-4 h-4 text-amber-400" />
+            {mounted ? (
+              mode === 'dark' ? (
+                <Sun className="w-4 h-4 text-amber-300" />
+              ) : (
+                <Moon className="w-4 h-4 text-stone-700" />
+              )
             ) : (
-              <Moon className="w-4 h-4 text-slate-700" />
+              <span className="w-4 h-4 block" aria-hidden="true" />
             )}
           </button>
 
-          {/* Mobile menu trigger */}
+          {/* Mobile Menu Trigger Button */}
           <button
+            type="button"
             onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden p-2 text-[var(--foreground)] rounded-full border border-[var(--line)] bg-[var(--chip-bg)] hover:border-[#0B7658] transition-colors cursor-pointer inline-flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B7658]"
-            aria-label="Toggle navigation menu"
+            className="lg:hidden p-2 rounded-full border border-[var(--line)] bg-[var(--chip-bg)] text-[var(--foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B7658]"
+            aria-label={isOpen ? 'Close navigation menu' : 'Open navigation menu'}
             aria-expanded={isOpen}
           >
             {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
+
       </div>
 
-      {/* Mobile Dropdown Drawer */}
+      {/* Mobile Animated Overlay Menu */}
       {isOpen && (
-        <div className="lg:hidden border-t border-[var(--line)] bg-[var(--background)] px-5 py-4 space-y-2 shadow-lg">
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              onClick={() => setIsOpen(false)}
-              className="min-h-[44px] flex items-center text-xs font-semibold uppercase tracking-[0.15em] text-[var(--muted)] hover:text-[var(--foreground)] px-3 py-2 transition-colors rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B7658]"
-            >
-              {link.name}
-            </Link>
-          ))}
-          <div className="pt-3 border-t border-[var(--line)] flex items-center justify-between text-xs text-[var(--muted)]">
-            <span className="uppercase tracking-wider text-[11px]">Delhi, IN Time</span>
-            <span className="tnum font-semibold text-[var(--foreground)]">{localTime}</span>
-          </div>
+        <div className="lg:hidden border-t border-[var(--line)] bg-[var(--background)] px-6 py-6 transition-colors duration-250">
+          <nav className="flex flex-col gap-3">
+            {NAV_LINKS.map((link) => (
+              <Link
+                key={link.name}
+                href={link.href}
+                onClick={() => setIsOpen(false)}
+                className="py-2 text-sm font-semibold uppercase tracking-[0.16em] text-[var(--foreground)] hover:text-[#0B7658] transition-colors"
+              >
+                {link.name}
+              </Link>
+            ))}
+          </nav>
         </div>
       )}
     </header>

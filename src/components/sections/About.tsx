@@ -21,7 +21,7 @@ export default function PublicAbout({ profile }: AboutProps) {
   const mindset = profile?.mindset?.trim();
 
   return (
-    <section id="about" className="py-16 sm:py-24 bg-[#F1F1F1] border-b border-[#DADADA]">
+    <section id="about" className="py-16 sm:py-24 bg-[var(--surface)] border-b border-[var(--line)] transition-colors duration-250">
       <Container>
         <div className="max-w-3xl">
           {/* Section Label + Title */}
@@ -31,33 +31,33 @@ export default function PublicAbout({ profile }: AboutProps) {
           />
 
           {/* Clean Bio Paragraph */}
-          <p className="mt-6 text-base sm:text-lg text-[#121212] leading-relaxed font-normal">
+          <p className="mt-6 text-base sm:text-lg text-[var(--foreground)] leading-relaxed font-normal">
             {bio}
           </p>
 
           {/* Data Chips (location, focus areas, status) */}
           <div className="mt-8 flex flex-wrap items-center gap-2.5">
             {location && (
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#DADADA] text-xs font-medium text-[#121212]">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--chip-bg)] border border-[var(--line)] text-xs font-medium text-[var(--foreground)]">
                 <MapPin className="w-3.5 h-3.5 text-[#0B7658]" />
                 <span>Based in {location}</span>
               </div>
             )}
 
             {focusArea && (
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#DADADA] text-xs font-medium text-[#121212]">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--chip-bg)] border border-[var(--line)] text-xs font-medium text-[var(--foreground)]">
                 <Sparkles className="w-3.5 h-3.5 text-[#0B7658]" />
                 <span>{focusArea}</span>
               </div>
             )}
 
             {mindset ? (
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#DADADA] text-xs font-medium text-[#121212]">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--chip-bg)] border border-[var(--line)] text-xs font-medium text-[var(--foreground)]">
                 <UserCheck className="w-3.5 h-3.5 text-[#0B7658]" />
                 <span>{mindset}</span>
               </div>
             ) : (
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#DADADA] text-xs font-medium text-[#121212]">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--chip-bg)] border border-[var(--line)] text-xs font-medium text-[var(--foreground)]">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#0B7658] opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-[#0B7658]"></span>

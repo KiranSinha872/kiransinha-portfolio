@@ -40,29 +40,23 @@ const DEFAULT_EDUCATION: Education[] = [
   },
 ];
 
-/**
- * Extracts initials from the first two significant words of an institution's name,
- * skipping stopwords like of, the, and, for, &, in.
- * Example:
- * - "Mirai School of Technology" -> "MS"
- * - "Gurucharan College" -> "GC"
- * - "Surendra Singha Memorial English School" -> "SS"
- */
-function getInstitutionInitials(name: string): string {
-  if (!name) return 'ED';
-  const ignoredWords = new Set(['of', 'the', 'and', 'for', '&', 'in']);
+function getInitials(name: string): string {
+  const stopwords = new Set(['of', 'the', 'and', 'for', '&', 'in']);
   const words = name
-    .trim()
     .split(/\s+/)
-    .map((w) => w.replace(/[^a-zA-Z0-9]/g, ''))
-    .filter((w) => w.length > 0 && !ignoredWords.has(w.toLowerCase()));
+    .map((w) => w.trim())
+    .filter((w) => w.length > 0 && !stopwords.has(w.toLowerCase()));
 
   if (words.length >= 2) {
     return (words[0][0] + words[1][0]).toUpperCase();
-  } else if (words.length === 1) {
+  }
+  if (words.length === 1 && words[0].length >= 2) {
     return words[0].slice(0, 2).toUpperCase();
   }
-  return name.slice(0, 2).toUpperCase();
+  if (words.length === 1) {
+    return words[0][0].toUpperCase();
+  }
+  return 'ED';
 }
 
 function InstitutionLogoTile({
@@ -73,13 +67,12 @@ function InstitutionLogoTile({
   logoUrl?: string;
 }) {
   const [imgError, setImgError] = useState(false);
-  const initials = getInstitutionInitials(institution);
+  const initials = getInitials(institution);
 
-  // If no logoUrl or the image fails to load, render initials fallback tile
   if (!logoUrl || imgError) {
     return (
       <div
-        className="w-14 h-14 sm:w-[112px] sm:h-[112px] rounded-2xl bg-[#E8F4EF] border border-[#E8E8E8] shadow-[0_1px_2px_rgba(0,0,0,0.04)] flex items-center justify-center shrink-0 select-none transition-colors duration-200 hover:border-[#0B7658] motion-reduce:transition-none"
+        className="w-14 h-14 sm:w-[112px] sm:h-[112px] rounded-2xl bg-[#0B7658]/10 border border-[var(--line)] shadow-[0_1px_2px_rgba(0,0,0,0.04)] flex items-center justify-center shrink-0 select-none transition-colors duration-200 hover:border-[#0B7658] motion-reduce:transition-none"
         aria-hidden="true"
       >
         <span className="font-semibold text-[#0B7658] text-base sm:text-3xl tracking-tight">
@@ -90,7 +83,7 @@ function InstitutionLogoTile({
   }
 
   return (
-    <div className="w-14 h-14 sm:w-[112px] sm:h-[112px] rounded-2xl bg-white border border-[#E8E8E8] p-1.5 sm:p-2 shadow-[0_1px_2px_rgba(0,0,0,0.04)] flex items-center justify-center shrink-0 overflow-hidden transition-colors duration-200 hover:border-[#0B7658] motion-reduce:transition-none">
+    <div className="w-14 h-14 sm:w-[112px] sm:h-[112px] rounded-2xl bg-[var(--chip-bg)] border border-[var(--line)] p-1.5 sm:p-2 shadow-[0_1px_2px_rgba(0,0,0,0.04)] flex items-center justify-center shrink-0 overflow-hidden transition-colors duration-200 hover:border-[#0B7658] motion-reduce:transition-none">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={logoUrl}
@@ -107,7 +100,7 @@ export default function EducationSection({ education }: EducationSectionProps) {
   const data = education && education.length > 0 ? education : DEFAULT_EDUCATION;
 
   return (
-    <section id="education" className="py-16 sm:py-24 bg-[#F9F9F9] border-b border-[#E8E8E8]">
+    <section id="education" className="py-16 sm:py-24 bg-[var(--surface)] text-[var(--foreground)] border-b border-[var(--line)] transition-colors duration-250">
       <Container>
         <div className="max-w-4xl">
           {/* Section Heading */}
@@ -118,13 +111,11 @@ export default function EducationSection({ education }: EducationSectionProps) {
           />
 
           {/* Education Rows with Top & Bottom Dividers */}
-          <div className="mt-10 border-t border-b border-[#E8E8E8] divide-y divide-[#E8E8E8]">
+          <div className="mt-10 border-t border-b border-[var(--line)] divide-y divide-[var(--line)]">
             {data.map((item, idx) => {
-              // Duration formatting: skip line if no start/end dates
               const hasStartDate = Boolean(item.startDate && item.startDate.trim());
               const hasEndDate = Boolean(item.endDate && item.endDate.trim());
               const isCurrent = Boolean(item.isCurrent);
-              const hasDates = hasStartDate || hasEndDate || isCurrent;
 
               let dateText = '';
               if (hasStartDate && (hasEndDate || isCurrent)) {
@@ -149,54 +140,45 @@ export default function EducationSection({ education }: EducationSectionProps) {
                   {/* Right Column: Text Stack */}
                   <div className="flex-1 min-w-0 space-y-2">
                     {/* a. Degree */}
-                    <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-[#111]">
+                    <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-[var(--foreground)]">
                       {item.degree}
                       {item.fieldOfStudy ? ` in ${item.fieldOfStudy}` : ''}
                     </h3>
 
                     {/* b. Institution Name & Location */}
                     <div className="flex items-center flex-wrap gap-x-3 gap-y-1 text-sm sm:text-base">
-                      <span className="font-medium text-[#111]">{item.institution}</span>
+                      <span className="font-medium text-[var(--foreground)]">{item.institution}</span>
                       {item.location && (
-                        <div className="inline-flex items-center gap-1 text-xs sm:text-sm text-[#5B5B5B]">
-                          <MapPin
-                            className="w-3.5 h-3.5 text-[#0B7658] shrink-0"
-                            aria-hidden="true"
-                          />
+                        <span className="inline-flex items-center gap-1 text-[var(--muted)]">
+                          <MapPin className="w-3.5 h-3.5 text-[#0B7658]" aria-hidden="true" />
                           <span>{item.location}</span>
-                        </div>
+                        </span>
                       )}
                     </div>
 
-                    {/* c. Duration on its own line with calendar icon (skip line if no dates) */}
-                    {hasDates && dateText && (
-                      <div className="flex items-center gap-1.5 text-xs sm:text-sm text-[#5B5B5B]">
-                        <Calendar
-                          className="w-3.5 h-3.5 text-[#5B5B5B] shrink-0"
-                          aria-hidden="true"
-                        />
+                    {/* c. Duration */}
+                    {dateText && (
+                      <div className="inline-flex items-center gap-1.5 text-xs sm:text-sm text-[var(--muted)]">
+                        <Calendar className="w-3.5 h-3.5 text-[var(--muted)]" aria-hidden="true" />
                         <span>{dateText}</span>
                       </div>
                     )}
 
-                    {/* d. Coursework / Description in muted grey */}
-                    {item.description && (
-                      <p className="text-xs sm:text-sm text-[#5B5B5B] leading-relaxed pt-0.5">
-                        {item.description}
-                      </p>
-                    )}
-
-                    {/* e. Achievement Pill (green tint, star icon, rounded-full) */}
+                    {/* d. Distinction Badge */}
                     {item.grade && (
                       <div className="pt-1">
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E8F4EF] border border-[#0B7658]/30 text-xs font-medium text-[#0B7658]">
-                          <Star
-                            className="w-3 h-3 text-[#0B7658] fill-[#0B7658] shrink-0"
-                            aria-hidden="true"
-                          />
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0B7658]/10 text-[#0B7658] border border-[#0B7658]/20 text-xs font-semibold">
+                          <Star className="w-3.5 h-3.5" aria-hidden="true" />
                           <span>{item.grade}</span>
-                        </span>
+                        </div>
                       </div>
+                    )}
+
+                    {/* e. Description / Coursework */}
+                    {item.description && (
+                      <p className="pt-1 text-xs sm:text-sm text-[var(--muted)] leading-relaxed">
+                        {item.description}
+                      </p>
                     )}
                   </div>
                 </article>
