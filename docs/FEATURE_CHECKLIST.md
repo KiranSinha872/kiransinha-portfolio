@@ -169,14 +169,18 @@ Portfolio_kiran/
   - "View all projects →" link seamlessly routing to `/projects` archive page.
   - Dedicated `/projects` page preserved with individual project cards and stack tags.
 
-### F. Certifications & Credentials
-- [ ] **Credential List:** Display of all certifications from `public.certifications`.
-- [ ] **Issuer & Date:** Clear badge/issuer name, issue date, and credential ID.
-- [ ] **Verification Link:** External link to verify credential on issuing authority (`credentialUrl`).
+### F. Certifications & Credentials (Phase f Implemented & Verified)
+- [x] **Credential Cards:** Display of all certifications from `public.certifications` with Onest typography.
+- [x] **Issuer & Date:** Clear badge/issuer name, issue date, and credential ID.
+- [x] **Verification Link:** External link to verify credential on issuing authority (`credentialUrl`) with `rel="noopener noreferrer"`.
 
-### G. Academic Journey / Education
-- [ ] **Timeline Data:** Display of institutions (`Mirai School of Technology`, `Gurucharan College`, `Surendra Singha Memorial School`), degrees, fields of study, dates, and locations.
-- [ ] **Academic Highlights:** Display of grades (e.g., "89.9% First Division with Distinction") and relevant coursework.
+### G. Competitive Programming & Developer Profiles (Phase f Implemented & Verified)
+- [x] **Coding Platforms:**
+  - GitHub (`profile.githubUrl` / `@KiranSinha872`)
+  - LeetCode (`profile.leetcodeUrl` / handle)
+  - CodeChef (`profile.codechefUrl` / handle)
+  - Codeforces (`profile.codeforcesUrl` / handle)
+- [x] **External Links:** Direct links to live coder profiles with outbound icon indicators and platform descriptions.
 
 ### H. Interactive Developer Ability Card (Phase d Implemented & Verified)
 - [x] **Holographic 3D Developer Ability Card (`#holo`, `#hc`):**
@@ -206,7 +210,15 @@ Portfolio_kiran/
   - One-click copy email button with clipboard confirmation.
   - Direct links to LinkedIn and GitHub.
 
-### J. Admin Portal & Data Management
+### J. Architectural Footer & Back-to-Top (Phase f Implemented & Verified)
+- [x] **Giant Viewport Wordmark:** Fluid responsive `KIRAN SINHA` wordmark auto-scaled to viewport width.
+- [x] **Circular Progress Back-To-Top Button:** Interactive SVG circular scroll progress ring tracking page depth with smooth scroll-to-top handler.
+- [x] **Credits & Administration:**
+  - "Design inspired by Rishi Thakor" credit.
+  - Copyright statement and social icon links.
+  - Discreet lock icon linking to `/admin/login`.
+
+### K. Admin Portal & Data Management
 - [ ] **Authentication:** Supabase Auth session guard with middleware protection.
 - [ ] **CRUD Operations:** Preserved management for Profile, Skills, Projects, Certifications, Education, and Contact Messages.
 - [ ] **Cache Invalidation:** Server action `revalidatePortfolio()` triggered on administrative writes.
