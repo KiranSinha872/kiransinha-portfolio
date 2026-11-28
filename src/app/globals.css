@@ -1,47 +1,121 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: var(--font-dm-sans), system-ui, -apple-system, sans-serif;
-  --font-heading: var(--font-bebas), sans-serif;
+  --font-sans: var(--font-onest), system-ui, -apple-system, sans-serif;
+  --font-heading: var(--font-onest), sans-serif;
   --font-bebas: var(--font-bebas), sans-serif;
-  --font-serif-num: var(--font-dm-serif), Georgia, serif;
+  --font-serif-num: var(--font-onest), monospace;
 
-  --color-bg-light: #F9F9F9;
-  --color-bg-alt: #F1F1F1;
-  --color-text-main: #121212;
-  --color-text-muted: #5B5B5B;
-  --color-divider: #DADADA;
+  --color-bg-light: #E8E4E0;
+  --color-bg-dark: #1A1818;
+  --color-surface-light: #DED8D4;
+  --color-surface-dark: #252121;
+  --color-text-main: var(--foreground);
+  --color-text-muted: var(--muted);
+  --color-divider: var(--line);
   --color-accent-emerald: #0B7658;
-  --color-accent-emerald-hover: #096148;
 }
 
 :root {
-  --bg-light: #F9F9F9;
-  --bg-alt: #F1F1F1;
-  --text-main: #121212;
-  --text-muted: #5B5B5B;
-  --divider: #DADADA;
-  --accent-emerald: #0B7658;
+  --background: #E8E4E0;
+  --foreground: #1A1818;
+  --ink: #1A1818;
+  --muted: #857878;
+  --subtle: #B5A8A8;
+  --line: #D5CDCA;
+  --surface: #DED8D4;
+  --surface-2: #D3CBC8;
+  --accent: #6B5C5C;
+  --accent-from: #C4B0B0;
+  --accent-to: #6B5C5C;
+  --hero-from: #EEEAE6;
+  --hero-mid: #E8E4E0;
+  --hero-to: #D8CDCA;
+  --radius-pill: 9999px;
+  --radius-card: 2rem;
+  --radius-card-sm: 1.25rem;
+  --radius-control: 0.875rem;
+  --container-shell: 88rem;
+  --font: var(--font-onest), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --e-line: cubic-bezier(0.215, 0.61, 0.355, 1);
+  --e-spring: cubic-bezier(0.22, 1, 0.36, 1);
+  --e-soft: cubic-bezier(0.16, 1, 0.3, 1);
+  --e-snap: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --btn-bg: #1A1818;
+  --btn-fg: #E8E4E0;
+  --chip-bg: rgba(242, 238, 235, 0.65);
+  --chip-bg-h: rgba(242, 238, 235, 0.95);
+  --chip-line: rgba(196, 176, 176, 0.45);
+  color-scheme: light;
+}
+
+html[data-mode="dark"] {
+  --background: #1A1818;
+  --foreground: #E8E4E0;
+  --ink: #E8E4E0;
+  --muted: #857878;
+  --subtle: #B5A8A8;
+  --line: rgba(196, 176, 176, 0.16);
+  --surface: #252121;
+  --surface-2: #302A2A;
+  --accent: #D9C6C6;
+  --btn-bg: #E8E4E0;
+  --btn-fg: #1A1818;
+  --chip-bg: rgba(196, 176, 176, 0.08);
+  --chip-bg-h: rgba(196, 176, 176, 0.16);
+  --chip-line: rgba(196, 176, 176, 0.16);
+  color-scheme: dark;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.5s;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+.shell {
+  max-width: var(--container-shell);
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+  width: 100%;
+}
+@media (min-width: 640px) {
+  .shell {
+    padding-inline: 2rem;
+  }
+}
+@media (min-width: 1024px) {
+  .shell {
+    padding-inline: 5.5rem;
+  }
 }
 
 html {
   scroll-behavior: smooth;
+  font-family: var(--font-onest), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  background-color: var(--background);
+  color: var(--foreground);
 }
 
 body {
   margin: 0;
   padding: 0;
-  background-color: #0C0C0C;
-  color: #EDEDED;
-  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-onest), ui-sans-serif, system-ui, -apple-system, sans-serif;
   overflow-x: hidden;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
-/* Public site shell — Light, clean, generous spacing, high contrast */
+/* Public site shell — Warm, textured, high contrast */
 .public-site {
-  background-color: #F9F9F9;
-  color: #121212;
-  font-family: var(--font-dm-sans), system-ui, -apple-system, sans-serif;
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-onest), ui-sans-serif, system-ui, -apple-system, sans-serif;
 }
 
 .public-site :focus-visible {
@@ -59,15 +133,7 @@ body {
   }
 }
 
-/* Legacy metallic gradient (kept for admin / transition) */
-.gradient-text {
-  background: linear-gradient(180deg, #646973 0%, #BBCCD7 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-/* Disable drag-and-drop ghosting for all images, svg, and media */
+/* Disable drag-and-drop ghosting for media */
 img, svg, video {
   user-select: none;
   -webkit-user-drag: none;

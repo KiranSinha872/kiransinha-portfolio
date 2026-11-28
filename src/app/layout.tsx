@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
-import { Bebas_Neue, DM_Sans, DM_Serif_Display } from 'next/font/google';
+import localFont from 'next/font/local';
+import { Bebas_Neue } from 'next/font/google';
 import { env } from '@/lib/env';
 import './globals.css';
 
@@ -10,23 +11,27 @@ const bebasNeue = Bebas_Neue({
   display: 'swap',
 });
 
-const dmSans = DM_Sans({
-  subsets: ['latin'],
-  variable: '--font-dm-sans',
-  display: 'swap',
-});
-
-const dmSerifDisplay = DM_Serif_Display({
-  weight: '400',
-  subsets: ['latin'],
-  variable: '--font-dm-serif',
+const onest = localFont({
+  src: [
+    {
+      path: '../../public/fonts/onest-latin.woff2',
+      weight: '100 900',
+      style: 'normal',
+    },
+    {
+      path: '../../public/fonts/onest-latin-ext.woff2',
+      weight: '100 900',
+      style: 'normal',
+    },
+  ],
+  variable: '--font-onest',
   display: 'swap',
 });
 
 const siteUrl = env.NEXT_PUBLIC_SITE_URL;
 
 export const viewport: Viewport = {
-  themeColor: '#F9F9F9',
+  themeColor: '#E8E4E0',
   colorScheme: 'light dark',
   width: 'device-width',
   initialScale: 1,
@@ -118,9 +123,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${bebasNeue.variable} ${dmSans.variable} ${dmSerifDisplay.variable}`}
+      className={`${onest.variable} ${bebasNeue.variable}`}
+      suppressHydrationWarning
     >
-      <body className="min-h-screen bg-[#0C0C0C] text-[#EDEDED] font-sans antialiased selection:bg-[#0B7658]/20 selection:text-[#0B7658]">
+      <body className="min-h-screen bg-[var(--background)] text-[var(--foreground)] font-sans antialiased selection:bg-[#0B7658]/20 selection:text-[#0B7658]">
         {children}
       </body>
     </html>
