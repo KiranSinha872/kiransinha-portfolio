@@ -118,12 +118,23 @@ Portfolio_kiran/
 - [x] **Spiral-Notebook Role Flip Card:** Interactive flip card cycling roles with dark ink on textured paper.
 - [x] **Pull-Cord Theme Lamp:** Interactive Verlet physics pull cord switching dark/light themes.
 
-### C. About Section
-- [ ] **Detailed Bio:** Comprehensive narrative from `profile.bio` / `profile.about`.
-- [ ] **Context Chips:**
-  - Location badge (e.g., "Based in Delhi / Silchar, India")
-  - Focus Area badge (e.g., "Artificial Intelligence & Machine Learning")
-  - Mindset / Status badge (e.g., "Available for Opportunities")
+### C. Academic & Development Journey Timeline (Phase c Implemented & Verified)
+- [x] **5-Milestone Journey Chapters:**
+  1. *2025 – Present:* B.Tech in Artificial Intelligence & Machine Learning at Mirai School of Technology.
+  2. *2024 – 2025:* Full-Stack Systems & Algorithmic Foundations (DSA problem solving, Supabase web apps).
+  3. *2023 – 2025:* Higher Secondary Science (PCMB) at Gurucharan College (Distinction).
+  4. *2022 – 2023:* Secondary School Education at Surendra Singha Memorial English School (89.9% Distinction).
+  5. *2021 – 2022:* First Lines of Code & Engineering Curiosity (C/C++ & Python fundamentals).
+- [x] **Mechanical Odometer Year Counter:**
+  - 4-digit roller (`.dg__c` digits 0–9) that mechanically rolls to the active year using cubic-bezier tumbler physics as the user scrolls through milestones.
+- [x] **3D Clock Tunnel Background Canvas:**
+  - 14 depth-receding 3D concentric clock rings with perspective scaling and clock face ticks, driven dynamically by scroll progress.
+  - Honors `prefers-reduced-motion` and pauses off-screen.
+- [x] **Vertical Progress Rail & Traveling Dot:**
+  - Illuminated traveling dot with glow trail tracking scroll position down the central rail.
+- [x] **Preservation of Academic & Bio Records:**
+  - Retains all database education records, degrees, grades, coursework highlights, and locations.
+  - Backwards-compatible `#about` and `#education` anchor IDs.
 
 ### D. Technical Skills Showcase (Phase b Implemented & Verified)
 - [x] **Dynamic Data Fetching:** Render skills dynamically from Supabase database (`public.skills`).
