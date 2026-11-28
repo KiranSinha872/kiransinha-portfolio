@@ -62,27 +62,27 @@ The redesign transforms the portfolio into an interactive, physics-driven develo
   - Back Face: Developer identity, GitHub contribution statistics, LeetCode ranking, credentials, and social links.
   - Tap or click to flip 180° with CSS 3D preserve-3d transform.
 
-### 4. Technical Skill Doors Wall
-- **Reference Element:** The 4 architectural skill doors (`#works`, `#dinfo`) with spring physics and walk-through zoom.
-- **Kiran's Implementation:**
-  - 4 specialized developer domains:
-    1. *Full-Stack & Backend Systems* (`#22304a`)
-    2. *Algorithms & Competitive Programming* (`#4a3540`)
-    3. *AI & Machine Learning Engineering* (`#7a8670`)
-    4. *Cloud Infrastructure & DevOps* (`#a4552c`)
-  - Spring-loaded hover interaction cracking the door open (`rotateY(10deg)`), accompanied by a custom cursor follower (`#doorCursor`).
-  - Floating info card (`#dinfo`) dynamically rendering technical competencies queried from Supabase (`public.skills`).
-  - Clicking a door swings it wide (`rotateY(70deg)`) and transitions seamlessly to the project showcase.
+### 4. Interactive Project Doors Wall & Overview Panel
+- **Reference Element:** The architectural doors (`#works`, `#dinfo`) with spring physics, hover crack-open, cursor follower, and swing-open on click.
+- **Kiran's Implementation (Plan Updated):**
+  - Interactive doors dynamically generated from real Supabase projects data (3 to 6 doors; prioritized by `featured: true` and sorted by `sort_order`).
+  - Architectural styling: rich palettes per door (e.g., `#22304a`, `#4a3540`, `#3e4a3d`, `#5a3a28`), doorway depth, fluted paneling, door plate displaying project number (`01`, `02`, `03`) and title.
+  - Spring-loaded hover interaction cracking the door open (`rotateY(10deg)`), accompanied by a custom cursor follower badge (`#doorCursor`).
+  - Clicking a door swings it wide open (`rotateY(70deg)`), illuminates the floor sill, and opens the **Project Overview Panel**.
+  - **Project Overview Panel:**
+    - Stacked 3D desktop monitor mockup rendered inside the panel as the interactive preview, showing the real project screenshot (`thumbnailUrl`).
+    - Extruded monitor bezel, neck, base, screen glare overlay, and dynamic mouse tilt easing.
+    - Project details: number, title, tagline/short description, what it does / problem it solves, individual tech stack tags.
+    - Action buttons: "Live Demo" and "GitHub Repo" (only displayed when the corresponding URLs exist in the database).
+    - Close button, ESC key handler, focus trapping, and tap-friendly touch flow for mobile.
+    - "View all projects →" link to `/projects` archive page.
 
-### 5. Stacked 3D Monitor Projects Showcase
-- **Reference Element:** Sticky stacked project cards with 3D tilted desktop monitor mockups.
+### 5. Technical Skills Showcase (Categorized Tabs & Animated Reveal)
+- **Reference Element:** Dedicated competencies showcase adapted for clean developer presentation.
 - **Kiran's Implementation:**
-  - Top 3 featured projects rendered on sticky cards that stack progressively during scroll.
-  - Each card contains an extruded 3D desktop monitor mockup turned at `rotateY(-17deg)` with realistic bezel, neck, base, and screen glare overlay.
-  - Interactive mouse hover dynamically eases the monitor angle to `rotateY(-12deg)`.
-  - Alternating cards ("flip") reverse the angle to `rotateY(17deg)` for visual balance.
-  - Individual tech stack tags, descriptive overview, live demo link, and GitHub repository link on every card.
-  - "View All Projects →" link redirecting to the dedicated `/projects` archive page.
+  - Category tabs/list driven dynamically by Supabase skill categories (`Programming`, `Backend`, `Database`, `Frontend`, `Data Science`, `Tools`, etc. — handles any number of categories gracefully).
+  - Animated reveal of each category's skills with clean tag layout.
+  - No fixed hardcoded domains and no invented proficiency numbers or fake metrics.
 
 ### 6. Time-Travel Academic & Development Journey
 - **Reference Element:** 5-chapter story timeline (`#about`) with 3D clock tunnel canvas and rolling mechanical odometer year.
@@ -98,7 +98,15 @@ The redesign transforms the portfolio into an interactive, physics-driven develo
   - Mechanical rolling odometer year counter (`.dg__c` digits 0–9) that updates automatically as each chapter enters viewport center.
   - Integrated Verified Certifications & Licenses sub-row.
 
-### 7. 5-Step Guided Questionnaire & Contact Experience
+### 7. Interactive Developer Ability Card
+- **Reference Element:** 3D collectible trading card (`#holo`, `#hc`) with foil shine and tap-to-flip interaction.
+- **Kiran's Implementation:**
+  - Trigger button in the hero and navigation.
+  - Front Face: Kiran's avatar, student badge, verified competencies, holographic rainbow foil, and mouse/touch 3D tilt.
+  - Back Face: Developer identity, GitHub stats, coding profiles, credentials, and social links.
+  - Tap or click to flip 180° with CSS 3D preserve-3d transform.
+
+### 8. 5-Step Guided Questionnaire & Contact Experience
 - **Reference Element:** 5-step modal questionnaire (`#modal`, `#reqForm`).
 - **Kiran's Implementation:**
   - Step 1: Opportunity / Project Scope (Full-Time, Internship, Contract, Open-Source).
@@ -109,47 +117,33 @@ The redesign transforms the portfolio into an interactive, physics-driven develo
   - Seamlessly piped into `/api/contact` with Cloudflare Turnstile token verification and Supabase `contact_messages` database insertion.
   - Immediate state feedback: progress bar, error handling, and confirmation screen.
 
-### 8. Architectural Footer & Back-to-Top
+### 9. Certifications, Developer Profiles & Architectural Footer
 - **Reference Element:** Scaled typography wordmark (`--wf`), dynamic background color blending, and circular SVG progress totop.
 - **Kiran's Implementation:**
+  - Competitive programming & open-source profile badges (LeetCode, CodeChef, Codeforces, GitHub).
+  - Verified certifications cards with issuer details and credential links.
   - Giant "KIRAN SINHA" wordmark auto-sized to viewport width.
-  - Back-to-top floating button with SVG circular scroll progress ring and luminance-based contrast switching.
-  - Social icons (GitHub, LinkedIn, Email) and discreet `/admin/login` link.
+  - Back-to-top floating button with SVG circular scroll progress ring.
+  - Discreet `/admin/login` link.
 
 ---
 
 ## 3. Order of Execution (Work Stages)
 
-1. **Stage 1: Theme & Typography Foundations**
-   - Install Lenis smooth scroll (`@studio-freight/lenis` or `lenis/react`).
-   - Configure `'Onest'` font variable and adaptive REM scaling in `src/app/globals.css` and `src/app/layout.tsx`.
-   - Setup dual-theme CSS variables and View Transitions helper.
-
-2. **Stage 2: Header, Overlay Menu & Verlet Pull Cord**
-   - Build `PullCord` component with canvas Verlet integration.
-   - Build responsive `Header` with live clock, year, brand logo, and overlay navigation.
-
-3. **Stage 3: Staggered Intro Loader & Hero**
-   - Build `IntroLoader` with 6 sliding discipline pills and percentage counter.
-   - Redesign `Hero` with fluid typography, live status badge, and resume viewer modal.
-
-4. **Stage 4: Holographic 3D Developer Ability Card**
-   - Build `AbilityCardModal` with front/back 3D tilt, gyroscope support, and flip mechanics.
-
-5. **Stage 5: Skill Doors Wall**
-   - Build `SkillDoors` component with spring physics hover, custom cursor follower, and floating description card connected to Supabase data.
-
-6. **Stage 6: Stacked 3D Monitor Projects Showcase**
-   - Build sticky stacked project cards with 3D monitor mockups and individual tech tags.
-   - Adapt standalone `/projects` archive page to match the new visual aesthetic.
-
-7. **Stage 7: Time-Travel Academic Journey**
-   - Build `JourneySection` with 3D clock tunnel canvas, traveling dot, and rolling odometer year counter.
-   - Integrate verified certifications and credentials.
-
-8. **Stage 8: 5-Step Contact Questionnaire**
-   - Build `ContactModal` with multi-step questionnaire, Turnstile integration, and `/api/contact` submission.
-
-9. **Stage 9: Architectural Footer & Verification**
-   - Implement auto-scaled wordmark footer and circular progress back-to-top button.
-   - Run end-to-end tests (`npm test`), build validation (`npm run build`), and linting (`npm run lint`).
+- **Phase (a): Projects doors + 3D monitor overview panel** *(Current Stage)*
+  - Dynamic doors generated from Supabase projects (3 to 6 doors).
+  - Hover crack-open spring physics, custom cursor follower, swing-open on click.
+  - Project Overview Panel with 3D monitor mockup, real screenshot, description, individual tech tags, live & repo links, close button, ESC key, focus trapping, and mobile tap support.
+  - "View all projects" link to `/projects`.
+- **Phase (b): Skills section**
+  - Category tabs/list + animated reveal driven dynamically by Supabase skill categories.
+- **Phase (c): Journey / Education**
+  - 3D clock tunnel canvas and rolling odometer year counter.
+- **Phase (d): Developer card**
+  - 3D holographic ability card modal with tilt and 180° flip.
+- **Phase (e): Contact questionnaire**
+  - 5-step interactive questionnaire modal with Turnstile and Supabase integration.
+- **Phase (f): Certifications + Profiles**
+  - Verified licenses and competitive coding profile showcases.
+- **Phase (g): Final Polish**
+  - Global performance, transitions, reduced-motion audits, responsive tuning.

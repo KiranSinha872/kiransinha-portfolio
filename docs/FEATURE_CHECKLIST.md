@@ -124,14 +124,23 @@ Portfolio_kiran/
 - [ ] **Skill Badges / Proficiency:** Skill name, proficiency percentage (e.g. 90%), and icon representation.
 - [ ] **Real-Time Subscription:** Maintain `subscribeToSkills` so admin deletions and creations propagate immediately without page reloads.
 
-### E. Projects & Showcase
-- [ ] **Featured vs. All Projects:**
-  - Landing page showcases the top 3 featured projects.
-  - "View all projects →" button redirects to the dedicated `/projects` archive page.
-- [ ] **Per-Project Tech Stack:** Every project card must individually display its specific technologies/tags (`project.tags`).
-- [ ] **Live Demo Links:** External link to `project.liveUrl` (with target `_blank`).
-- [ ] **Source Code Links:** External link to `project.repoUrl` (GitHub repository).
-- [ ] **Project Thumbnails:** Dynamic thumbnail image from Supabase storage or remote URL.
+### E. Projects & Showcase (Phase a Implemented)
+- [x] **Interactive Project Doors Wall:**
+  - Dynamic doors generated from real Supabase projects data (up to 6 doors, prioritizes `featured` and `order`).
+  - Architectural styling with custom palettes per door (`#1c2638`, `#341f2a`, `#1b2b20`, `#382315`, `#221c33`, `#282417`).
+  - Spring-loaded hover interaction cracking the door open (`rotateY(-24deg)`), revealing warm interior light spill and sill illumination.
+  - Floating circular cursor badge (`#doorCursor`) following mouse with smooth transition.
+  - Click swings door wide (`rotateY(-75deg)`) and launches Project Overview Panel.
+- [x] **Project Overview Panel (Modal Dialog):**
+  - Project index (`PROJECT 01 / 03`), title, tagline, what it does, and problem it solves.
+  - Individualized tech stack tags (`project.tags`).
+  - Extruded 3D desktop monitor mockup with realistic bezel, webcam dot, screen glare overlay, and dynamic mouse tilt easing using real project screenshots (`thumbnailUrl`).
+  - Action buttons: "Live Demo" and "Source Code" (only rendered when URL exists).
+  - Keyboard navigation (Left/Right arrow keys to cycle projects, ESC to close, Tab focus trapping).
+  - Tap-friendly mobile flow and accessible `role="dialog"`.
+- [x] **Archive Page Preservation:**
+  - "View all projects →" link seamlessly routing to `/projects` archive page.
+  - Dedicated `/projects` page preserved with individual project cards and stack tags.
 
 ### F. Certifications & Credentials
 - [ ] **Credential List:** Display of all certifications from `public.certifications`.
