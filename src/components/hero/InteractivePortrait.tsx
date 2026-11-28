@@ -17,11 +17,12 @@ export interface PortraitPart {
 
 export const PORTRAIT_PARTS: PortraitPart[] = [
   { id: 'hair', name: 'Hair', val: 1 },
-  { id: 'face_skin', name: 'Face & Skin', val: 2 },
-  { id: 'shirt', name: 'Shirt', val: 3 },
-  { id: 'tie', name: 'Tie', val: 4 },
-  { id: 'jacket', name: 'Jacket', val: 5 },
-  { id: 'trousers', name: 'Trousers', val: 6 },
+  { id: 'face', name: 'Face & Neck', val: 2 },
+  { id: 'hands', name: 'Hands', val: 3 },
+  { id: 'shirt', name: 'Shirt', val: 4 },
+  { id: 'tie', name: 'Tie', val: 5 },
+  { id: 'jacket', name: 'Jacket', val: 6 },
+  { id: 'trousers', name: 'Trousers', val: 7 },
 ];
 
 export default function InteractivePortrait({ onOpenDevCard }: InteractivePortraitProps) {
@@ -125,7 +126,6 @@ export default function InteractivePortrait({ onOpenDevCard }: InteractivePortra
         onPointerLeave={handlePointerLeave}
         onClick={handleClick}
         className="relative w-[280px] sm:w-[320px] lg:w-[360px] aspect-[515/1024] cursor-crosshair select-none"
-        title="Hover to highlight parts • Click to lock colour"
       >
         {/* Floating "My developer card" Badge on the portrait (Chest area, face clear) */}
         {onOpenDevCard && (

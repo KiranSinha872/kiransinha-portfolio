@@ -109,17 +109,19 @@ Portfolio_kiran/
 - [x] **Per-Part Portrait Highlighting & Cut-Out Photo:**
   - High-resolution cut-out portrait without any green circle or backdrop halo (clean cut-out photo only).
   - Greyscale at rest.
-  - Per-part semantic segmentation generated offline with Self-Correction Human Parsing (SCHP LIP model):
+  - Strict 7-part Partition of Unity ($\sum_{p=1}^7 W_p = \alpha$, 0 uncovered pixels, 0 overlap):
     - `hair`: Hair cut-out
-    - `face_skin`: Face, neck, and skin
-    - `shirt`: White dress shirt
-    - `tie`: Necktie
+    - `face`: Complete face, glasses (frames, bridge, lenses), eyes, ears, jaw, and neck
+    - `hands`: Hands and wrists (pocket hand and side hand)
+    - `shirt`: White collar wings, front placket, and cuffs
+    - `tie`: Necktie knot and blade
     - `jacket`: Suit jacket / blazer
     - `trousers`: Pants / trousers
   - Hovering a part fades only that part to real colour (0.4s ease). Moving cursor moves colour with cursor.
   - Clicking/tapping a part locks it in colour. Multiple parts can be locked simultaneously. Clicking empty space does nothing.
-  - Keyboard accessible (`role="toolbar"` with focusable part badges, arrow navigation, and Enter to toggle).
-  - Clean feathered edges without halos or color bleed outside silhouette.
+  - Native HTML title tooltip removed so face is completely unobstructed.
+  - Keyboard accessible (`role="toolbar"` with focusable part badges and Enter to toggle).
+  - Clean feathered edges normalized to cut-out silhouette.
   - Respects `prefers-reduced-motion: reduce`.
   - Floating "My developer card" button remains fully accessible.
 - [x] **Resume Viewing:** "View Resume" button that opens `profile.resumeUrl` in an interactive modal with direct download support.

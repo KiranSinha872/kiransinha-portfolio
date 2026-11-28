@@ -67,6 +67,7 @@ export default function PublicHeader({ profile }: HeaderProps = {}) {
         {/* Left: Local-time pill (Delhi, IN) - Tagline removed entirely to eliminate any overlap */}
         <div className="flex items-center shrink-0">
           <div
+            suppressHydrationWarning
             className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[var(--line)] bg-[var(--chip-bg)] text-xs text-[var(--foreground)] shrink-0 select-none"
             title="Local Time in Delhi, India (Asia/Kolkata)"
           >
@@ -77,10 +78,13 @@ export default function PublicHeader({ profile }: HeaderProps = {}) {
             <span className="font-semibold text-[11px] tracking-wide uppercase text-[var(--muted)]">
               Delhi, IN
             </span>
-            {localTime && (
+            {mounted && localTime && (
               <>
                 <span className="text-[var(--line)]">·</span>
-                <span className="tnum font-medium text-[11px] text-[var(--foreground)]">
+                <span
+                  suppressHydrationWarning
+                  className="tnum font-medium text-[11px] text-[var(--foreground)]"
+                >
                   {localTime}
                 </span>
               </>
