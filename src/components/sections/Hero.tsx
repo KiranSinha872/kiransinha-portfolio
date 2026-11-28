@@ -7,6 +7,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { FileText, ArrowRight, Sparkles } from 'lucide-react';
 import { LinkedInIcon } from '@/components/ui/PlatformIcons';
 import PublicResumeModal from '@/components/ui/PublicResumeModal';
+import DeveloperCardModal from '@/components/ui/DeveloperCardModal';
 import PullCord from '@/components/hero/PullCord';
 import IntroLoader from '@/components/hero/IntroLoader';
 import FlipCalendar from '@/components/hero/FlipCalendar';
@@ -18,6 +19,7 @@ interface HeroProps {
 
 export default function PublicHero({ profile }: HeroProps) {
   const [resumeModalOpen, setResumeModalOpen] = useState(false);
+  const [devCardModalOpen, setDevCardModalOpen] = useState(false);
   const [portraitRevealed, setPortraitRevealed] = useState(false);
   const shouldReduceMotion = useReducedMotion();
 
@@ -170,10 +172,10 @@ export default function PublicHero({ profile }: HeroProps) {
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
-                  scrollToSection('developer-card-placeholder');
+                  setDevCardModalOpen(true);
                 }}
                 className="absolute top-[52%] sm:top-[48%] -left-3 sm:-left-6 z-20 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[var(--line)] bg-[var(--background)]/95 backdrop-blur-md shadow-xl text-xs font-semibold text-[var(--foreground)] hover:border-[#0B7658] hover:scale-105 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B7658]"
-                title="Explore Developer Card"
+                title="Explore Developer Ability Card"
               >
                 <Sparkles className="w-3.5 h-3.5 text-[#0B7658]" />
                 <span>My developer card</span>
@@ -235,6 +237,13 @@ export default function PublicHero({ profile }: HeroProps) {
         resumeUrl={resumeUrl || ''}
         title="Kiran Sinha — Resume"
         onClose={() => setResumeModalOpen(false)}
+      />
+
+      {/* Holographic 3D Developer Ability Card Modal */}
+      <DeveloperCardModal
+        isOpen={devCardModalOpen}
+        onClose={() => setDevCardModalOpen(false)}
+        profile={profile}
       />
     </section>
   );

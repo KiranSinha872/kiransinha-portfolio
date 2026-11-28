@@ -178,13 +178,15 @@ Portfolio_kiran/
 - [ ] **Timeline Data:** Display of institutions (`Mirai School of Technology`, `Gurucharan College`, `Surendra Singha Memorial School`), degrees, fields of study, dates, and locations.
 - [ ] **Academic Highlights:** Display of grades (e.g., "89.9% First Division with Distinction") and relevant coursework.
 
-### H. Competitive Programming & Developer Profiles
-- [ ] **Coding Platforms:**
-  - GitHub (`profile.githubUrl` / `@kiransinha`)
-  - LeetCode (`profile.leetcodeUrl` / handle)
-  - CodeChef (`profile.codechefUrl` / handle)
-  - Codeforces (`profile.codeforcesUrl` / handle)
-- [ ] **External Links:** Direct links to live coder profiles with outbound icon indicators.
+### H. Interactive Developer Ability Card (Phase d Implemented & Verified)
+- [x] **Holographic 3D Developer Ability Card (`#holo`, `#hc`):**
+  - Triggered via "My developer card" button on hero portrait chest badge.
+  - Authentic 3D trading card with responsive mouse/touch tilt physics (`rotateX`, `rotateY`, `perspective: 1200px`).
+  - Dynamic holographic rainbow foil layer, sheen glare highlight, and light reflection sheen (`mix-blend-color-dodge`).
+  - Interactive tap or click to flip 180° (`preserve-3d` with smooth cubic-bezier transition).
+  - Front Face: framed portrait, name, AIML student credentials, verified specialization tags, limited edition metadata.
+  - Back Face: verified passport with Mirai School of Technology enrollment, location badges, and direct external links to GitHub and LeetCode profiles.
+  - Accessible modal dialog: ESC key to close, backdrop click, dedicated close button, `role="dialog"`, `aria-modal="true"`, body scroll locking, and `prefers-reduced-motion` compliance.
 
 ### I. Contact & Questionnaire Experience
 - [ ] **Submission Endpoint:** POST to `/api/contact`.
