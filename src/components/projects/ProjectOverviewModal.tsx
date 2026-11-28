@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import Image from 'next/image';
 import { X, ArrowUpRight, ChevronLeft, ChevronRight, Code2 } from 'lucide-react';
+import { useReducedMotion } from 'framer-motion';
 import { GitHubIcon } from '@/components/ui/PlatformIcons';
 import type { Project } from '@/types';
 
@@ -23,6 +24,7 @@ export default function ProjectOverviewModal({
 }: ProjectOverviewModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const previousActiveElement = useRef<HTMLElement | null>(null);
+  const shouldReduceMotion = useReducedMotion();
 
   // 3D Monitor tilt state
   const [tilt, setTilt] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
@@ -232,7 +234,9 @@ export default function ProjectOverviewModal({
                 <div
                   className="transition-transform duration-300 ease-out flex flex-col items-center"
                   style={{
-                    transform: isHoveringMonitor
+                    transform: shouldReduceMotion
+                      ? 'none'
+                      : isHoveringMonitor
                       ? `rotateY(${-14 + tilt.x}deg) rotateX(${4 + tilt.y}deg)`
                       : 'rotateY(-15deg) rotateX(4deg)',
                     transformStyle: 'preserve-3d',

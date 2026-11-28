@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowUpRight, Sparkles } from 'lucide-react';
+import { useReducedMotion } from 'framer-motion';
 import type { Project } from '@/types';
 import ProjectOverviewModal from './ProjectOverviewModal';
 
@@ -72,6 +73,7 @@ export default function ProjectDoors({ projects }: ProjectDoorsProps) {
   const [activeDoorIdx, setActiveDoorIdx] = useState<number | null>(null);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
 
   // Cursor Follower
   const wallRef = useRef<HTMLDivElement>(null);
@@ -79,7 +81,7 @@ export default function ProjectDoors({ projects }: ProjectDoorsProps) {
   const [isCursorInside, setIsCursorInside] = useState(false);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!wallRef.current) return;
+    if (!wallRef.current || shouldReduceMotion) return;
     const rect = wallRef.current.getBoundingClientRect();
     setCursorPos({
       x: e.clientX - rect.left,
@@ -88,6 +90,11 @@ export default function ProjectDoors({ projects }: ProjectDoorsProps) {
   };
 
   const handleDoorClick = (project: Project, idx: number) => {
+    if (shouldReduceMotion) {
+      setSelectedProject(project);
+      setIsModalOpen(true);
+      return;
+    }
     setActiveDoorIdx(idx);
     // Smooth transition: crack door wide, then open modal
     setTimeout(() => {
@@ -206,7 +213,9 @@ export default function ProjectDoors({ projects }: ProjectDoorsProps) {
                 // Hover: -22deg (cracks inward revealing warm light inside)
                 // Opening: -75deg (swings wide open)
                 let doorRotation = 'rotateY(0deg)';
-                if (isOpening) {
+                if (shouldReduceMotion) {
+                  doorRotation = 'none';
+                } else if (isOpening) {
                   doorRotation = 'rotateY(-75deg)';
                 } else if (isHovered) {
                   doorRotation = 'rotateY(-24deg)';
