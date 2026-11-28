@@ -106,23 +106,17 @@ Portfolio_kiran/
 ### B. Hero Section (Implemented & Verified)
 - [x] **Name & Title:** Dynamic rendering of `profile.name` ("Kiran Sinha") and title/headline.
 - [x] **Bio Preview:** Dynamic rendering of `profile.bio` / `profile.about`.
-- [x] **Per-Part Portrait Highlighting & Cut-Out Photo:**
+- [x] **Portrait Interactive Colour Spotlight Trail:**
   - High-resolution cut-out portrait without any green circle or backdrop halo (clean cut-out photo only).
-  - Greyscale at rest.
-  - Strict 7-part Partition of Unity ($\sum_{p=1}^7 W_p = \alpha$, 0 uncovered pixels, 0 overlap):
-    - `hair`: Hair cut-out
-    - `face`: Complete face, glasses (frames, bridge, lenses), eyes, ears, jaw, and neck
-    - `hands`: Hands and wrists (pocket hand and side hand)
-    - `shirt`: White collar wings, front placket, and cuffs
-    - `tie`: Necktie knot and blade
-    - `jacket`: Suit jacket / blazer
-    - `trousers`: Pants / trousers
-  - Hovering a part fades only that part to real colour (0.4s ease). Moving cursor moves colour with cursor.
-  - Clicking/tapping a part locks it in colour. Multiple parts can be locked simultaneously. Clicking empty space does nothing.
-  - Native HTML title tooltip removed so face is completely unobstructed.
-  - Keyboard accessible (`role="toolbar"` with focusable part badges and Enter to toggle).
-  - Clean feathered edges normalized to cut-out silhouette.
-  - Respects `prefers-reduced-motion: reduce`.
+  - Greyscale at rest in both light and dark themes.
+  - Soft feathered "colour spotlight" brush (radius ~90 to 125px) revealing true-colour photo under cursor on pointer move/drag.
+  - Linear motion interpolation between pointer events ensuring continuous smooth streaks rather than disjoint dots.
+  - Gradual fading trail (~1.6s exponential decay) allowing multiple fading trails to remain visible at once before dissolving back to grey.
+  - Canvas trail mask composited via `destination-in` so colour is strictly clipped to the cut-out silhouette.
+  - Animation loop automatically pauses when mask decays or portrait scrolls out of viewport (`IntersectionObserver`).
+  - Small hand cursor (`cursor-pointer`) when hovering over portrait.
+  - Touch support: touch drag paints spotlight streak; tap paints single spotlight.
+  - Keyboard and reduced motion: static centred reveal on focus with `prefers-reduced-motion`, accessible `role="region"` and `aria-label`.
   - Floating "My developer card" button remains fully accessible.
 - [x] **Resume Viewing:** "View Resume" button that opens `profile.resumeUrl` in an interactive modal with direct download support.
 - [x] **Get In Touch CTA:** Primary button scrolling directly to the contact experience.
